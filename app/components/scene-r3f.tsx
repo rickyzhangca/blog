@@ -1,8 +1,12 @@
 'use client';
 
-import { CameraControls, GizmoHelper, GizmoViewport } from '@react-three/drei';
+import {
+  CameraControls,
+  GizmoHelper,
+  GizmoViewport,
+  Stats,
+} from '@react-three/drei';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { Perf } from 'r3f-perf';
 import { Suspense, useMemo, useRef, useState } from 'react';
 import type { Mesh } from 'three';
 import { DoubleSide, ShaderMaterial, TextureLoader, Vector3 } from 'three';
@@ -166,6 +170,7 @@ export default function SceneR3f() {
   const [hasChanged, setHasChanged] = useState(false);
   const isResettingRef = useRef(false);
   const lastChangeRef = useRef(0);
+  const perfContainerRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="relative">
@@ -189,19 +194,32 @@ export default function SceneR3f() {
         Reset
       </button>
 
+      <div
+        className="pointer-events-none absolute top-2 left-2 flex gap-1"
+        ref={perfContainerRef}
+      >
+        <Stats
+          className="!relative"
+          parent={perfContainerRef as unknown as React.RefObject<HTMLElement>}
+          showPanel={0}
+        />
+        <Stats
+          className="!relative"
+          parent={perfContainerRef as unknown as React.RefObject<HTMLElement>}
+          showPanel={1}
+        />
+        <Stats
+          className="!relative"
+          parent={perfContainerRef as unknown as React.RefObject<HTMLElement>}
+          showPanel={2}
+        />
+      </div>
+
       <Canvas
         camera={{ position: [0, -8, 6], zoom: 50 }}
         orthographic
         style={{ width: '798px', height: '480px' }}
       >
-        <Perf
-          position="bottom-right"
-          style={{
-            bottom: '12px',
-            right: '12px',
-          }}
-        />
-
         <CameraControls
           makeDefault
           onChange={() => {
