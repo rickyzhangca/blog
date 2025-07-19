@@ -39,7 +39,7 @@ const HitPlane = ({ onPoint }: HitPlaneProps) => {
   const planeRef = useRef<Mesh | null>(null);
 
   return (
-    <mesh onPointerMove={(e) => onPoint(e.point.clone())} ref={planeRef}>
+    <mesh onPointerMove={(e) => onPoint(e.point)} ref={planeRef}>
       <planeGeometry args={[500, 500, 1, 1]} />
       <meshBasicMaterial depthWrite={false} opacity={0} transparent />
     </mesh>
@@ -148,7 +148,6 @@ const RipplePlane = ({
     return mat;
   }, [tex, isShadow]);
 
-  // update uniform every frame
   useFrame(() => {
     material.uniforms.uDisplacement.value.copy(displacementRef.current);
   });
@@ -161,14 +160,12 @@ const RipplePlane = ({
   );
 };
 
-// main r3f scene component
 export default function SceneR3f() {
-  // shared vector for displacement between components
-  // initialize away from center to avoid initial ripple effect
   const displacementRef = useRef<Vector3>(new Vector3(10, 10, 0));
   const cameraControlsRef = useRef<CameraControls>(null);
   const [hasChanged, setHasChanged] = useState(false);
   const isResettingRef = useRef(false);
+  const lastChangeRef = useRef(0);
 
   return (
     <div className="relative">
@@ -208,8 +205,10 @@ export default function SceneR3f() {
         <CameraControls
           makeDefault
           onChange={() => {
-            if (!isResettingRef.current) {
+            const now = performance.now();
+            if (!isResettingRef.current && now - lastChangeRef.current > 200) {
               setHasChanged(true);
+              lastChangeRef.current = now;
             }
           }}
           ref={cameraControlsRef}
