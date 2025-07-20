@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   description: 'placeholder content for the first blog post',
 };
 
-// first blog article placeholder page
 const FirstArticle = () => {
   return (
     <ArticleLayout>
