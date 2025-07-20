@@ -5,12 +5,12 @@ import { Divider } from './divider';
 
 export default function Home() {
   return (
-    <div className="">
+    <div className="flex flex-1 flex-col">
       <Scene />
       <Divider />
-      <div className="flex flex-col">
+      <div className="flex">
         {articles.map((article, idx) => (
-          <div key={article.slug}>
+          <div className="flex-1" key={article.slug}>
             {idx > 0 && <Divider className="h-4" />}
             <ArticleItem article={article} />
           </div>

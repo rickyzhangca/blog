@@ -17,10 +17,10 @@ export const Cover = ({ id }: CoverProps) => {
   const [isDevMode] = useAtom(isDevModeAtom);
 
   return (
-    <div className="group/cover relative h-40 w-60 border">
+    <div className="group/cover relative aspect-3/2 w-full xs:w-40 outline outline-border lg:w-60">
       <button
         className={cn(
-          'absolute right-0 bottom-0 z-10 cursor-pointer p-2 outline outline-border transition hover:bg-foreground/3 active:bg-background ',
+          'absolute top-0 right-0 z-10 cursor-pointer bg-white p-2 outline outline-border transition',
           !isDevMode && 'opacity-0 group-hover/cover:opacity-100'
         )}
         onClick={(e) => {
@@ -34,12 +34,11 @@ export const Cover = ({ id }: CoverProps) => {
         <RotateCcwIcon size={16} strokeWidth={1.2} />
       </button>
       <svg
-        className="translate-y-1"
+        className="absolute inset-0 h-full w-full translate-y-1"
         fill="none"
-        height="160"
         key={playId}
+        preserveAspectRatio="xMidYMid meet"
         viewBox="0 0 240 160"
-        width="240"
         xmlns="http://www.w3.org/2000/svg"
       >
         <title>Verification asymmetry cover</title>
