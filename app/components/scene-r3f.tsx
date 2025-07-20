@@ -7,10 +7,12 @@ import {
   Stats,
 } from '@react-three/drei';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { Suspense, useMemo, useRef, useState } from 'react';
+import { useAtom } from 'jotai';
+import { Suspense, useMemo, useRef } from 'react';
 import type { Mesh } from 'three';
 import { DoubleSide, ShaderMaterial, TextureLoader, Vector3 } from 'three';
 import { cn } from '@/lib/utils';
+import { isDevModeAtom } from '../atoms';
 import shadowPng from './shadow.png';
 import texturePng from './texture.png';
 
@@ -165,78 +167,76 @@ const RipplePlane = ({
 };
 
 export default function SceneR3f() {
+  const [isDevMode] = useAtom(isDevModeAtom);
   const displacementRef = useRef<Vector3>(new Vector3(10, 10, 0));
   const cameraControlsRef = useRef<CameraControls>(null);
-  const [hasChanged, setHasChanged] = useState(false);
-  const isResettingRef = useRef(false);
   const lastChangeRef = useRef(0);
   const perfContainerRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="relative">
-      <button
-        className={cn(
-          !hasChanged && 'opacity-0',
-          'absolute bottom-4 left-4 z-10 cursor-pointer rounded-full bg-black/3 px-4 py-2 font-medium text-foreground/70 text-sm transition hover:bg-black/5'
-        )}
-        disabled={!hasChanged}
-        onClick={() => {
-          isResettingRef.current = true;
-          setHasChanged(false);
-          cameraControlsRef.current?.reset();
+      {isDevMode && (
+        <button
+          className={cn(
+            'absolute bottom-4 left-4 z-10 cursor-pointer rounded-full bg-black/3 px-4 py-2 font-medium text-foreground/70 text-sm transition hover:bg-black/5'
+          )}
+          onClick={() => {
+            cameraControlsRef.current?.setLookAt(0, -8, 6, 0, 0, 0, true);
+          }}
+          type="button"
+        >
+          Reset
+        </button>
+      )}
 
-          setTimeout(() => {
-            isResettingRef.current = false;
-          }, 100);
-        }}
-        type="button"
-      >
-        Reset
-      </button>
-
-      <div
-        className="pointer-events-none absolute top-2 left-2 flex gap-1"
-        ref={perfContainerRef}
-      >
-        <Stats
-          className="!relative"
-          parent={perfContainerRef as unknown as React.RefObject<HTMLElement>}
-          showPanel={0}
-        />
-        <Stats
-          className="!relative"
-          parent={perfContainerRef as unknown as React.RefObject<HTMLElement>}
-          showPanel={1}
-        />
-        <Stats
-          className="!relative"
-          parent={perfContainerRef as unknown as React.RefObject<HTMLElement>}
-          showPanel={2}
-        />
-      </div>
+      {isDevMode && (
+        <div
+          className="pointer-events-none absolute top-2 left-2 flex gap-1"
+          ref={perfContainerRef}
+        >
+          <Stats
+            className="!relative"
+            parent={perfContainerRef as unknown as React.RefObject<HTMLElement>}
+            showPanel={0}
+          />
+          <Stats
+            className="!relative"
+            parent={perfContainerRef as unknown as React.RefObject<HTMLElement>}
+            showPanel={1}
+          />
+          <Stats
+            className="!relative"
+            parent={perfContainerRef as unknown as React.RefObject<HTMLElement>}
+            showPanel={2}
+          />
+        </div>
+      )}
 
       <Canvas
-        camera={{ position: [0, -8, 6], zoom: 50 }}
+        camera={{ position: [0, -8, 6], zoom: 40 }}
+        className="!h-[480px]"
         orthographic
-        style={{ width: '798px', height: '480px' }}
       >
-        <CameraControls
-          makeDefault
-          onChange={() => {
-            const now = performance.now();
-            if (!isResettingRef.current && now - lastChangeRef.current > 200) {
-              setHasChanged(true);
+        {isDevMode && (
+          <CameraControls
+            makeDefault
+            maxZoom={40}
+            minZoom={40}
+            onChange={() => {
+              const now = performance.now();
               lastChangeRef.current = now;
-            }
-          }}
-          ref={cameraControlsRef}
-        />
-        <GizmoHelper alignment="bottom-right" margin={[64, 64]}>
-          <GizmoViewport
-            axisColors={['#9d4b4b', '#2f7f4f', '#3b5b9d']}
-            labelColor="white"
+            }}
+            ref={cameraControlsRef}
           />
-        </GizmoHelper>
+        )}
+        {isDevMode && (
+          <GizmoHelper alignment="bottom-right" margin={[64, 64]}>
+            <GizmoViewport
+              axisColors={['#9d4b4b', '#2f7f4f', '#3b5b9d']}
+              labelColor="white"
+            />
+          </GizmoHelper>
+        )}
 
         <color args={[0xff_ff_ff]} attach="background" />
 

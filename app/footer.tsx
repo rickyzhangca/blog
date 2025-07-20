@@ -1,8 +1,16 @@
+'use client';
+
+import { useAtom } from 'jotai';
 import { WrenchIcon } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { isDevModeAtom } from './atoms';
 import { Divider } from './divider';
 
 export const Footer = () => {
+  const [isDevMode, setIsDevMode] = useAtom(isDevModeAtom);
+  const pathname = usePathname();
   return (
     <Divider className="h-42">
       <div className="flex items-center justify-between gap-2">
@@ -16,14 +24,27 @@ export const Footer = () => {
             Ricky Zhang
           </Link>
         </p>
-        <button className="cursor-pointer border bg-white p-2.5" type="button">
-          <WrenchIcon
-            absoluteStrokeWidth
-            className="text-foreground/50"
-            size={20}
-            strokeWidth={1.5}
-          />
-        </button>
+        {pathname === '/' && (
+          <button
+            className={cn(
+              'cursor-pointer border p-2.5',
+              isDevMode ? 'border-transparent bg-foreground' : 'bg-background'
+            )}
+            onClick={() => {
+              setIsDevMode(!isDevMode);
+            }}
+            type="button"
+          >
+            <WrenchIcon
+              absoluteStrokeWidth
+              className={cn(
+                isDevMode ? 'text-background' : 'text-foreground/50'
+              )}
+              size={20}
+              strokeWidth={1.2}
+            />
+          </button>
+        )}
       </div>
     </Divider>
   );
