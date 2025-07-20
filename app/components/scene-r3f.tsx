@@ -46,7 +46,17 @@ const HitPlane = ({ onPoint }: HitPlaneProps) => {
   const planeRef = useRef<Mesh | null>(null);
 
   return (
-    <mesh onPointerMove={(e) => onPoint(e.point)} ref={planeRef}>
+    <mesh
+      onPointerDown={(e) => {
+        (e.target as HTMLElement).setPointerCapture(e.pointerId);
+        onPoint(e.point);
+      }}
+      onPointerMove={(e) => onPoint(e.point)}
+      onPointerUp={(e) => {
+        (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+      }}
+      ref={planeRef}
+    >
       <planeGeometry args={[500, 500, 1, 1]} />
       <meshBasicMaterial depthWrite={false} opacity={0} transparent />
     </mesh>
@@ -250,7 +260,7 @@ export default function SceneR3f() {
 
       <Canvas
         camera={{ position: [0, -8, 6], zoom }}
-        className="!h-[480px]"
+        className="!h-[480px] touch-none"
         orthographic
       >
         <ResponsiveZoom zoom={zoom} />
