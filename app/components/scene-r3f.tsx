@@ -260,7 +260,7 @@ export default function SceneR3f() {
 
       <Canvas
         camera={{ position: [0, -8, 6], zoom }}
-        className="!h-[480px] touch-none"
+        className="!h-[420px] touch-none"
         orthographic
       >
         <ResponsiveZoom zoom={zoom} />
