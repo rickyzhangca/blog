@@ -1,7 +1,7 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { WrenchIcon } from 'lucide-react';
+import { ArrowUpRightIcon, WrenchIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -14,37 +14,30 @@ export const Footer = () => {
   return (
     <Divider className="h-42">
       <div className="flex items-center justify-between gap-2">
-        <p className="border bg-white px-4 py-2 text-foreground/50">
-          By{' '}
-          <Link
-            className="underline underline-offset-2"
-            href="https://rickyzhang.me"
-            target="_blank"
-          >
-            Ricky Zhang
-          </Link>
-        </p>
         {pathname === '/' && (
           <button
             className={cn(
-              'cursor-pointer border p-2.5',
-              isDevMode ? 'border-transparent bg-foreground' : 'bg-background'
+              'cursor-pointer border p-2.5 transition',
+              isDevMode
+                ? 'border-transparent bg-foreground text-background'
+                : 'bg-background text-foreground/40 hover:border-foreground/30 hover:text-foreground/60'
             )}
             onClick={() => {
               setIsDevMode(!isDevMode);
             }}
             type="button"
           >
-            <WrenchIcon
-              absoluteStrokeWidth
-              className={cn(
-                isDevMode ? 'text-background' : 'text-foreground/50'
-              )}
-              size={20}
-              strokeWidth={1.2}
-            />
+            <WrenchIcon absoluteStrokeWidth size={16} strokeWidth={1.2} />
           </button>
         )}
+        <Link
+          className="flex cursor-pointer items-center gap-2 border bg-white py-2 pr-3 pl-4 text-foreground/50 text-sm transition hover:border-foreground/30 hover:text-foreground/70"
+          href="https://rickyzhang.me"
+          target="_blank"
+        >
+          By Ricky Zhang
+          <ArrowUpRightIcon size={16} strokeWidth={1.2} />
+        </Link>
       </div>
     </Divider>
   );
