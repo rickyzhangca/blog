@@ -1,13 +1,18 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useAtom } from 'jotai';
 import { ChevronRightIcon, RotateCcwIcon } from 'lucide-react';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { isDevModeAtom } from './atoms';
 import Scene from './components/scene-r3f';
 import { Divider } from './divider';
 
 export default function Home() {
   const [playId, setPlayId] = useState(0);
+  const [isDevMode] = useAtom(isDevModeAtom);
+
   return (
     <div className="">
       <Scene />
@@ -19,7 +24,10 @@ export default function Home() {
         <div className="flex items-center gap-6">
           <div className="group/cover relative h-40 w-60 border">
             <button
-              className="absolute right-0 bottom-0 z-10 cursor-pointer p-2 opacity-0 outline outline-border transition hover:bg-foreground/3 active:bg-background group-hover/cover:opacity-100"
+              className={cn(
+                'absolute right-0 bottom-0 z-10 cursor-pointer p-2 outline outline-border transition hover:bg-foreground/3 active:bg-background ',
+                !isDevMode && 'opacity-0 group-hover/cover:opacity-100'
+              )}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
