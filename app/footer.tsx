@@ -12,7 +12,7 @@ export const Footer = () => {
   const [isDevMode, setIsDevMode] = useAtom(isDevModeAtom);
   const pathname = usePathname();
   return (
-    <Divider className="h-42">
+    <Divider className="h-28 sm:h-36">
       <div className="flex items-center justify-between gap-2">
         {pathname === '/' && (
           <button
