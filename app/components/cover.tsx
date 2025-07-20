@@ -12,7 +12,8 @@ type CoverProps = {
 };
 
 export const Cover = ({ id }: CoverProps) => {
-  const [playId, setPlayId] = useState(`${id}-cover-animation`);
+  const [countPlayed, setCountPlayed] = useState(0);
+  const [playId, setPlayId] = useState(`${id}-cover-animation-${countPlayed}`);
   const [isDevMode] = useAtom(isDevModeAtom);
 
   return (
@@ -25,7 +26,8 @@ export const Cover = ({ id }: CoverProps) => {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          setPlayId(`${id}-cover-animation`);
+          setPlayId(`${id}-cover-animation-${countPlayed + 1}`);
+          setCountPlayed((prev) => prev + 1);
         }}
         type="button"
       >
