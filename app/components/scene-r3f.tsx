@@ -168,13 +168,14 @@ const RipplePlane = ({
 };
 
 const calcZoom = (w: number) => {
-  if (w < 640) {
-    return 30;
+  switch (true) {
+    case w < 500:
+      return 25;
+    case w < 800:
+      return 30;
+    default:
+      return 40;
   }
-  if (w < 1024) {
-    return 40;
-  }
-  return 50;
 };
 
 const ResponsiveZoom = ({ zoom }: { zoom: number }) => {
