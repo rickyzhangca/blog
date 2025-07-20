@@ -6,11 +6,12 @@ import {
   GizmoViewport,
   Stats,
 } from '@react-three/drei';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { useAtom } from 'jotai';
-import { Suspense, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import type { Mesh } from 'three';
 import { DoubleSide, ShaderMaterial, TextureLoader, Vector3 } from 'three';
+
 import { cn } from '@/lib/utils';
 import { isDevModeAtom } from '../atoms';
 import shadowPng from './shadow.png';
@@ -166,8 +167,42 @@ const RipplePlane = ({
   );
 };
 
+const calcZoom = (w: number) => {
+  if (w < 640) {
+    return 30;
+  }
+  if (w < 1024) {
+    return 40;
+  }
+  return 50;
+};
+
+const ResponsiveZoom = ({ zoom }: { zoom: number }) => {
+  const { camera, invalidate } = useThree();
+  useEffect(() => {
+    camera.zoom = zoom;
+    camera.updateProjectionMatrix();
+    invalidate();
+  }, [zoom, camera, invalidate]);
+  return null;
+};
+
 export default function SceneR3f() {
   const [isDevMode] = useAtom(isDevModeAtom);
+
+  const [zoom, setZoom] = useState(50);
+  useEffect(() => {
+    if (cameraControlsRef.current) {
+      cameraControlsRef.current.zoomTo(zoom, true);
+    }
+  }, [zoom]);
+  useEffect(() => {
+    const handler = () => setZoom(calcZoom(window.innerWidth));
+    handler();
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
   const displacementRef = useRef<Vector3>(new Vector3(10, 10, 0));
   const cameraControlsRef = useRef<CameraControls>(null);
   const lastChangeRef = useRef(0);
@@ -213,15 +248,16 @@ export default function SceneR3f() {
       )}
 
       <Canvas
-        camera={{ position: [0, -8, 6], zoom: 40 }}
+        camera={{ position: [0, -8, 6], zoom }}
         className="!h-[480px]"
         orthographic
       >
+        <ResponsiveZoom zoom={zoom} />
         {isDevMode && (
           <CameraControls
             makeDefault
-            maxZoom={40}
-            minZoom={40}
+            maxZoom={70}
+            minZoom={20}
             onChange={() => {
               const now = performance.now();
               lastChangeRef.current = now;
