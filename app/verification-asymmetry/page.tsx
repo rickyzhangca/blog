@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import { ArticleLayout } from '../article-layout';
+import { Image } from '../components/image';
 import meta from './meta.json' with { type: 'json' };
 
 export const metadata: Metadata = {
@@ -53,19 +53,17 @@ const VerificationAsymmetry = () => {
         asymmetry is why the emergence of design engineers, not AI, is the most
         important shift in design practice today.
       </p>
-      <p>
-        <em>Design's core challenge isn't craft - it's verification.</em>
-      </p>
+      <blockquote>
+        Design's core challenge isn't craft - it's verification.
+      </blockquote>
 
       <h2>Verification Asymmetry in Design vs. Engineering</h2>
+      <p>Difficulty in verification is undesirable.</p>
       <p>
         Software engineering has never been just about writing better code -
         it's also about verifying code quality. Continuous integration turns "it
         works on my machine" into "it works everywhere." Unit tests transform "I
         think this works" into "I can prove this works."
-      </p>
-      <p>
-        <em>Difficulty in verification is undesirable.</em>
       </p>
       <Image
         alt="Verification asymmetry image - 2"
@@ -207,12 +205,10 @@ const VerificationAsymmetry = () => {
         they now better accelerate verification, making design easier and faster
         for their teams.
       </p>
-      <p>
-        <em>
-          The most valuable and long-term disruption AI brought to design
-          industry is the rise of design engineers.
-        </em>
-      </p>
+      <blockquote>
+        The most valuable and long-term disruption AI brought to design industry
+        is the rise of design engineers.
+      </blockquote>
       <Image
         alt="Verification asymmetry image - 7"
         height={412}
@@ -252,9 +248,7 @@ const VerificationAsymmetry = () => {
         Design engineering reframes the eternal "should designers code?" debate.
         It’s on a very surface level. The actual question is:
       </p>
-      <p>
-        <em>How do we make design decisions more verifiable?</em>
-      </p>
+      <blockquote>How do we make design decisions more verifiable?</blockquote>
       <p>
         In the past, sometimes the answer is code. Sometimes it's better
         research methods. Sometimes it's new metrics. Right now in 2025, people
@@ -285,6 +279,43 @@ const VerificationAsymmetry = () => {
         src="/verification-asymmetry/9.svg"
         width={734}
       />
+
+      <h2>Kudos</h2>
+      <p>
+        Thanks to{' '}
+        <a
+          href="https://www.jw.works/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Jerry Wang
+        </a>
+        ,{' '}
+        <a
+          href="https://ryanyao.design/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Ryan Yao
+        </a>
+        , and{' '}
+        <a
+          href="https://anthonyung.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Anthony Ung
+        </a>{' '}
+        for reviewing this article, and the design engineering team at{' '}
+        <a
+          href="https://wealthsimple.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Wealthsimple
+        </a>{' '}
+        for inspirations.
+      </p>
     </ArticleLayout>
   );
 };

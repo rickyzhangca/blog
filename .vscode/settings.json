@@ -1,5 +1,12 @@
 {
-  "cSpell.words": ["dogfood", "metas", "threejs", "turbopack", "ultracite"],
+  "cSpell.words": [
+    "dogfood",
+    "metas",
+    "threejs",
+    "turbopack",
+    "ultracite",
+    "Wealthsimple"
+  ],
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
