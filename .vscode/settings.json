@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["metas", "threejs", "turbopack", "ultracite"],
+  "cSpell.words": ["dogfood", "metas", "threejs", "turbopack", "ultracite"],
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
