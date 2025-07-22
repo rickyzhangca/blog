@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = generateOGMetadata({
   title: 'Design Engineer Blog',
+  description: 'Thoughts on design and design engineering',
 });
 
 export default function RootLayout({

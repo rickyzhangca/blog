@@ -137,6 +137,12 @@ describe('Metadata Generation', () => {
 
       // @ts-expect-error false alarm
       expect(metadata.twitter?.card).toBe('summary_large_image');
+
+      // verify descriptions and site name
+      expect(metadata.description).toBe('Design Engineer Blog');
+      expect(metadata.openGraph?.description).toBe('Design Engineer Blog');
+      expect(metadata.openGraph?.siteName).toBe('Design Engineer Blog');
+      expect(metadata.twitter?.description).toBe('Design Engineer Blog');
     });
 
     it('should generate metadata for an article page', () => {
@@ -168,6 +174,12 @@ describe('Metadata Generation', () => {
       expect(ogArticle?.publishedTime).toBe('2025-07-01');
       // @ts-expect-error false alarm
       expect(ogArticle?.authors).toContain('Ricky Zhang');
+
+      // verify descriptions and site name for article
+      expect(metadata.description).toBe(article.description);
+      expect(metadata.openGraph?.description).toBe(article.description);
+      expect(metadata.openGraph?.siteName).toBe('Design Engineer Blog');
+      expect(metadata.twitter?.description).toBe(article.description);
     });
 
     it('should include canonical URL when slug is provided', () => {
