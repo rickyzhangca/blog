@@ -1,12 +1,15 @@
 import type { Metadata } from 'next';
 import { ArticleLayout } from '../article-layout';
 import { Image } from '../components/image';
+import { generateMetadata as generateOGMetadata } from '@/lib/og-image';
 import meta from './meta.json' with { type: 'json' };
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateOGMetadata({
   title: meta.title,
   description: meta.description,
-};
+  slug: 'verification-asymmetry',
+  article: { ...meta, slug: 'verification-asymmetry' },
+});
 
 const VerificationAsymmetry = () => {
   return (

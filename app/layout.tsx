@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { generateMetadata as generateOGMetadata } from '@/lib/og-image';
 import { cn } from '@/lib/utils';
 import { Footer } from './footer';
 import './globals.css';
@@ -15,10 +16,11 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
+// Generate default metadata with OG image for the homepage
+export const metadata: Metadata = generateOGMetadata({
   title: 'Design Engineer Blog',
-  description: 'Design Engineer Blog by Ricky Zhang',
-};
+  description: 'Thoughts on design, engineering, and the intersection of both.',
+});
 
 export default function RootLayout({
   children,
