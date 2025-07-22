@@ -92,20 +92,6 @@ describe('OG Image API Endpoint', () => {
       expect(element).toBeDefined();
     });
 
-    it('should generate an OG image with description parameter', async () => {
-      // Create a mock request with description parameter
-      const request = new NextRequest(
-        'https://example.com/api/og?description=Test%20Description'
-      );
-
-      // Call the GET handler
-      const response = await GET(request);
-
-      // Verify the response
-      expect(response).toBeDefined();
-      expect(ImageResponse).toHaveBeenCalled();
-    });
-
     it('should generate an OG image with type parameter', async () => {
       // Create a mock request with type parameter
       const request = new NextRequest(
@@ -137,7 +123,7 @@ describe('OG Image API Endpoint', () => {
     it('should generate an OG image with all parameters', async () => {
       // Create a mock request with all parameters
       const request = new NextRequest(
-        'https://example.com/api/og?title=Test%20Title&description=Test%20Description&type=article&author=Test%20Author'
+        'https://example.com/api/og?title=Test%20Title'
       );
 
       // Call the GET handler

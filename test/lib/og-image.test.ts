@@ -31,13 +31,6 @@ describe('OG Image URL Generation', () => {
       expect(url).toContain('Test%2520Title');
     });
 
-    it('should include description parameter when provided', () => {
-      const params: OGImageParams = { description: 'Test Description' };
-      const url = generateOGImageUrl(params);
-      expect(url).toContain('description=');
-      expect(url).toContain('Test%2520Description');
-    });
-
     it('should include type parameter when provided with valid value', () => {
       const params: OGImageParams = { type: 'article' };
       const url = generateOGImageUrl(params);
@@ -54,13 +47,11 @@ describe('OG Image URL Generation', () => {
     it('should include all parameters when provided', () => {
       const params: OGImageParams = {
         title: 'Test Title',
-        description: 'Test Description',
         type: 'article',
         author: 'Test Author',
       };
       const url = generateOGImageUrl(params);
       expect(url).toContain('title=');
-      expect(url).toContain('description=');
       expect(url).toContain('type=article');
       expect(url).toContain('author=');
     });
@@ -102,7 +93,6 @@ describe('OG Image URL Generation', () => {
       expect(url).toContain('title=');
       expect(url).toContain('Test%2520Article');
       expect(url).toContain('type=article');
-      expect(url).not.toContain('description=');
     });
   });
 
@@ -111,19 +101,13 @@ describe('OG Image URL Generation', () => {
       const url = generateDefaultOGImageUrl();
       expect(url).toContain('title=');
       expect(url).toContain('Design%2520Engineer%2520Blog');
-      expect(url).toContain('description=');
       expect(url).toContain('type=default');
     });
 
     it('should generate a default OG image URL with custom values', () => {
-      const url = generateDefaultOGImageUrl(
-        'Custom Title',
-        'Custom Description'
-      );
+      const url = generateDefaultOGImageUrl('Custom Title');
       expect(url).toContain('title=');
       expect(url).toContain('Custom%2520Title');
-      expect(url).toContain('description=');
-      expect(url).toContain('Custom%2520Description');
       expect(url).toContain('type=default');
     });
   });
@@ -134,13 +118,11 @@ describe('Metadata Generation', () => {
     it('should generate basic metadata for a regular page', () => {
       const params: GenerateMetadataParams = {
         title: 'Test Page',
-        description: 'This is a test page',
       };
 
       const metadata = generateMetadata(params);
 
       expect(metadata.title).toBe('Test Page');
-      expect(metadata.description).toBe('This is a test page');
       // @ts-expect-error false alarm
       expect(metadata.openGraph?.type).toBe('website');
 
@@ -167,7 +149,6 @@ describe('Metadata Generation', () => {
 
       const params: GenerateMetadataParams = {
         title: article.title,
-        description: article.description,
         slug: article.slug,
         article,
       };
@@ -175,7 +156,6 @@ describe('Metadata Generation', () => {
       const metadata = generateMetadata(params);
 
       expect(metadata.title).toBe('Test Article');
-      expect(metadata.description).toBe('This is a test article');
 
       // Check article-specific metadata
       const openGraph = metadata.openGraph;
@@ -193,7 +173,6 @@ describe('Metadata Generation', () => {
     it('should include canonical URL when slug is provided', () => {
       const params: GenerateMetadataParams = {
         title: 'Test Page',
-        description: 'This is a test page',
         slug: 'test-page',
       };
 
@@ -204,7 +183,6 @@ describe('Metadata Generation', () => {
     it('should use base URL as canonical when no slug is provided', () => {
       const params: GenerateMetadataParams = {
         title: 'Test Page',
-        description: 'This is a test page',
       };
 
       const metadata = generateMetadata(params);

@@ -6,7 +6,6 @@ import type { ArticleMeta } from './articles';
  */
 export interface OGImageParams {
   title?: string;
-  description?: string;
   type?: 'article' | 'default';
   author?: string;
 }
@@ -24,11 +23,6 @@ export function generateOGImageUrl(params: OGImageParams): string {
   // Add title parameter if provided
   if (params.title) {
     baseUrl.searchParams.append('title', encodeURIComponent(params.title));
-  }
-  
-  // Add description parameter if provided
-  if (params.description) {
-    baseUrl.searchParams.append('description', encodeURIComponent(params.description));
   }
   
   // Add type parameter if provided (article or default)
@@ -61,25 +55,19 @@ export function generateArticleOGImageUrl(article: ArticleMeta): string {
  * Generates a default OG image URL for pages without specific metadata
  * 
  * @param title - Optional title override
- * @param description - Optional description override
  * @returns The fully constructed default OG image URL
  */
 export function generateDefaultOGImageUrl(
   title = 'Design Engineer Blog',
-  description = 'Thoughts on design, engineering, and the intersection of both.'
 ): string {
   return generateOGImageUrl({
     title,
-    description,
     type: 'default',
   });
-}/**
+}
 
- * Parameters for generating metadata objects
- */
 export interface GenerateMetadataParams {
   title: string;
-  description: string;
   slug?: string;
   article?: ArticleMeta;
 }
@@ -91,7 +79,7 @@ export interface GenerateMetadataParams {
  * @returns A Next.js Metadata object with OG image and other social meta tags
  */
 export function generateMetadata(params: GenerateMetadataParams): Metadata {
-  const { title, description, article } = params;
+  const { title, article } = params;
   
   // Determine if this is an article page or a regular page
   const isArticle = !!article;
@@ -99,7 +87,7 @@ export function generateMetadata(params: GenerateMetadataParams): Metadata {
   // Generate the appropriate OG image URL
   const ogImageUrl = isArticle 
     ? generateArticleOGImageUrl(article)
-    : generateDefaultOGImageUrl(title, description);
+    : generateDefaultOGImageUrl(title );
   
   // Construct the canonical URL if slug is provided
   const url = params.slug 
@@ -110,12 +98,10 @@ export function generateMetadata(params: GenerateMetadataParams): Metadata {
   return {
     // Basic metadata
     title,
-    description,
     
     // Open Graph metadata
     openGraph: {
       title,
-      description,
       type: isArticle ? 'article' : 'website',
       url,
       images: [
@@ -137,7 +123,6 @@ export function generateMetadata(params: GenerateMetadataParams): Metadata {
     twitter: {
       card: 'summary_large_image',
       title,
-      description,
       images: [ogImageUrl],
       creator: '@rickyrickyriri', // This could be configurable
     },

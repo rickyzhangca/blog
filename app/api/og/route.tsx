@@ -276,14 +276,6 @@ async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
     allowedChars: /[A-Za-z0-9\s.,!?:;'"()[\]{}\-_+=&%$#@]/g, // Allow common text characters
   });
 
-  // Extract and sanitize description parameter with validation (requirement 2.1, 2.2, 2.4)
-  const description = sanitizeInput(url.searchParams.get('description'), {
-    maxLength: 250, // Limit description length to fit in OG image
-    defaultValue:
-      'Thoughts on design, engineering, and the intersection of both.',
-    allowedChars: /[A-Za-z0-9\s.,!?:;'"()[\]{}\-_+=&%$#@]/g, // Allow common text characters
-  });
-
   // Extract and validate content type parameter (article or default)
   const typeParam = url.searchParams.get('type');
   const type = ['article', 'default'].includes(typeParam || '')
@@ -300,15 +292,10 @@ async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
   // Log parameter validation results
   logInfo('OG Image parameters processed', {
     title: title !== url.searchParams.get('title') ? 'sanitized' : 'unchanged',
-    description:
-      description !== url.searchParams.get('description')
-        ? 'sanitized'
-        : 'unchanged',
     type,
     author:
       author !== url.searchParams.get('author') ? 'sanitized' : 'unchanged',
     titleLength: title.length,
-    descriptionLength: description.length,
   });
 
   // Use pre-computed dimensions for performance (requirement 1.2)
@@ -407,7 +394,6 @@ async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
       {
         type,
         titleLength: title.length,
-        descriptionLength: description.length,
         url: request.url,
       },
       renderError instanceof Error ? renderError : new Error(errorMessage)

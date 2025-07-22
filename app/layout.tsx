@@ -16,10 +16,8 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-// Generate default metadata with OG image for the homepage
 export const metadata: Metadata = generateOGMetadata({
   title: 'Design Engineer Blog',
-  description: 'Thoughts on design, engineering, and the intersection of both.',
 });
 
 export default function RootLayout({
