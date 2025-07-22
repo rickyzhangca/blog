@@ -6,7 +6,7 @@ import { Divider } from './divider';
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
-      <Divider />
+      <Divider className="border-t-0" />
       <Scene />
       <Divider />
       <div className="flex">
