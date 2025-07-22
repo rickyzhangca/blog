@@ -11,7 +11,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@react-three/drei": "^10.5.1",
+    "@react-three/drei": "^10.5.2",
     "@react-three/fiber": "^9.2.0",
     "@vercel/analytics": "^1.5.0",
     "class-variance-authority": "^0.7.1",
@@ -19,7 +19,7 @@
     "framer-motion": "^12.23.6",
     "jotai": "^2.12.5",
     "lucide-react": "^0.525.0",
-    "next": "15.4.1",
+    "next": "15.4.3",
     "r3f-perf": "^7.2.3",
     "radix-ui": "^1.4.2",
     "react": "19.1.0",
@@ -28,12 +28,12 @@
     "three": "^0.178.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.1.1",
+    "@biomejs/biome": "2.1.2",
     "@tailwindcss/postcss": "^4.1.11",
     "@tailwindcss/typography": "^0.5.16",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
-    "@types/node": "^24.0.14",
+    "@types/node": "^24.1.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@types/three": "^0.178.1",
@@ -42,7 +42,7 @@
     "tailwindcss": "^4.1.11",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5.8.3",
-    "ultracite": "5.0.36",
+    "ultracite": "5.0.47",
     "vitest": "^3.2.4"
   }
 }
