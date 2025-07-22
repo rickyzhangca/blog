@@ -53,45 +53,70 @@ const CACHE_CONTROL = {
   NONE: 'no-store, max-age=0, must-revalidate',
 } as const;
 
-// fetch logo and convert to base64 data url (satori only renders data URIs reliably)
-const LOGO_RES = await fetch(
-  `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/logo.png`
-);
-const LOGO_ARRAY = await LOGO_RES.arrayBuffer();
-const LOGO_SRC = `data:image/png;base64,${Buffer.from(LOGO_ARRAY).toString('base64')}`;
+// lazily fetch logo and cache as base64 data url (satori only renders data URIs reliably)
+let cachedLogoSrc: string | null = null;
 
-const DEFAULT_OG_IMAGE = new ImageResponse(
-  <div
-    style={{
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#FFFFFF',
-    }}
-  >
-    <img
-      alt="logo"
-      src={LOGO_SRC}
-      style={{
-        width: '80%',
-        height: '80%',
-        transform: 'translateX(-25px) translateY(5px)',
-      }}
-    />
-  </div>,
-  {
-    width: 1200,
-    height: 630,
-    headers: {
-      'Cache-Control': CACHE_CONTROL.SHORT,
-      'Content-Type': 'image/png',
-      Vary: 'Accept',
-      'X-Image-Type': 'fallback',
-    },
+async function getLogoSrc(): Promise<string> {
+  if (cachedLogoSrc) {
+    return cachedLogoSrc;
   }
-);
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/logo.png`
+    );
+
+    const arrayBuffer = await res.arrayBuffer();
+    cachedLogoSrc = `data:image/png;base64,${Buffer.from(arrayBuffer).toString('base64')}`;
+    return cachedLogoSrc;
+  } catch (error) {
+    // fallback to transparent png data uri (1x1)
+    cachedLogoSrc =
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO2S9FYAAAAASUVORK5CYII=';
+    logWarn(
+      'failed to fetch logo for og image, using transparent placeholder',
+      {
+        error: error instanceof Error ? error.message : 'unknown',
+      }
+    );
+    return cachedLogoSrc;
+  }
+}
+
+async function createDefaultOgImage(): Promise<ImageResponse> {
+  const logoSrc = await getLogoSrc();
+  return new ImageResponse(
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FFFFFF',
+      }}
+    >
+      <img
+        alt="logo"
+        src={logoSrc}
+        style={{
+          width: '80%',
+          height: '80%',
+          transform: 'translateX(-25px) translateY(5px)',
+        }}
+      />
+    </div>,
+    {
+      width: 1200,
+      height: 630,
+      headers: {
+        'Cache-Control': CACHE_CONTROL.SHORT,
+        'Content-Type': 'image/png',
+        Vary: 'Accept',
+        'X-Image-Type': 'fallback',
+      },
+    }
+  );
+}
 
 /**
  * OG Image generation API endpoint
@@ -236,6 +261,7 @@ export async function GET(request: NextRequest) {
  * @returns ImageResponse - A 1200x630 PNG image for social media previews
  */
 async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
+  const logoSrc = await getLogoSrc();
   // Start performance monitoring for image generation
   const perfMonitor = startPerformanceMonitoring('og-image-render');
 
@@ -316,7 +342,7 @@ async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
         >
           <img
             alt="logo"
-            src={LOGO_SRC}
+            src={logoSrc}
             style={{
               height: '240px',
               margin: '40px',
@@ -363,7 +389,7 @@ async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
       return imageResponse;
     }
 
-    const imageResponse = await DEFAULT_OG_IMAGE;
+    const imageResponse = await createDefaultOgImage();
 
     const duration = perfMonitor.end();
     imageResponse.headers.set('Server-Timing', `gen;dur=${duration}`);
@@ -406,7 +432,7 @@ async function createFallbackImage(): Promise<ImageResponse> {
   logInfo('Generating fallback OG image');
 
   try {
-    const fallbackResponse = await DEFAULT_OG_IMAGE;
+    const fallbackResponse = await createDefaultOgImage();
 
     // Add fallback-specific cache headers
     fallbackResponse.headers.set('Cache-Control', CACHE_CONTROL.SHORT);
