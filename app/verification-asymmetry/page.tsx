@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { generateMetadata as generateOGMetadata } from '@/lib/og-image';
 import { ArticleLayout } from '../article-layout';
+import { Avatar, AvatarFallback, AvatarImage } from '../components/avatar';
+import { H1, H2 } from '../components/h';
 import { Image } from '../components/image';
 import meta from './meta.json' with { type: 'json' };
 
@@ -12,10 +14,64 @@ export const metadata: Metadata = generateOGMetadata({
 
 const VerificationAsymmetry = () => {
   return (
-    <ArticleLayout>
-      <h1>Verification asymmetry</h1>
+    <ArticleLayout
+      credit={
+        <>
+          <div className="not-prose -space-x-3 flex w-fit transition-all hover:space-x-1.5">
+            <Avatar>
+              <AvatarImage src="/verification-asymmetry/jerry-wang.webp" />
+              <AvatarFallback>JW</AvatarFallback>
+            </Avatar>
+            <Avatar>
+              <AvatarImage src="/verification-asymmetry/ryan-yao.webp" />
+              <AvatarFallback>RY</AvatarFallback>
+            </Avatar>
+            <Avatar>
+              <AvatarImage src="/verification-asymmetry/anthony-ung.webp" />
+              <AvatarFallback>AU</AvatarFallback>
+            </Avatar>
+          </div>
+          <p>
+            Thanks to{' '}
+            <a
+              href="https://www.jw.works/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Jerry Wang
+            </a>
+            ,{' '}
+            <a
+              href="https://ryanyao.design/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Ryan Yao
+            </a>
+            , and{' '}
+            <a
+              href="https://anthonyung.com/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Anthony Ung
+            </a>{' '}
+            for reviewing this article, and the design engineering team at{' '}
+            <a
+              href="https://wealthsimple.com/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Wealthsimple
+            </a>{' '}
+            for inspirations.
+          </p>
+        </>
+      }
+    >
+      <H1>Verification asymmetry</H1>
 
-      <h2>The Two-Axis Framework</h2>
+      <H2>The Two-Axis Framework</H2>
       <p>
         Picture this: you're in a design review, and someone asks, "let's do
         another round." The designer smiles and has no choice. Everyone has
@@ -59,7 +115,7 @@ const VerificationAsymmetry = () => {
         Design's core challenge isn't craft - it's verification.
       </blockquote>
 
-      <h2>Verification Asymmetry in Design vs. Engineering</h2>
+      <H2>Verification Asymmetry in Design vs. Engineering</H2>
       <p>Difficulty in verification is undesirable.</p>
       <p>
         Software engineering has never been just about writing better code -
@@ -119,7 +175,7 @@ const VerificationAsymmetry = () => {
         </li>
       </ul>
 
-      <h2>Mapping the Design Landscape</h2>
+      <H2>Mapping the Design Landscape</H2>
       <p>Let's map some common design work across our two axes:</p>
       <Image
         alt="Verification asymmetry image - 4"
@@ -138,7 +194,7 @@ const VerificationAsymmetry = () => {
         product quality, and drive impact.
       </p>
 
-      <h2>Design Engineer Improves Verification</h2>
+      <H2>Design Engineer Improves Verification</H2>
       <p>
         Design engineers aren't just designers who code or developers who care
         about pixels. Their core value is improving verification practices with
@@ -174,7 +230,7 @@ const VerificationAsymmetry = () => {
         width={734}
       />
 
-      <h2>AI Disrupted Design In Unexpected Way</h2>
+      <H2>AI Disrupted Design In Unexpected Way</H2>
       <p>
         The most-used AI features by product designers - from layer renaming to
         background removal to rewriting to image gen - all target the craft
@@ -257,7 +313,7 @@ const VerificationAsymmetry = () => {
         are coming to an agreement that the answer is code.
       </p>
 
-      <h2>Future</h2>
+      <H2>Future</H2>
       <p>
         AI is not replacing designers any time soon, but it boosted the
         emergence of design engineers. Seasoned designers should start thinking
@@ -281,43 +337,6 @@ const VerificationAsymmetry = () => {
         src="/verification-asymmetry/9.svg"
         width={734}
       />
-
-      <h2>Kudos</h2>
-      <p>
-        Thanks to{' '}
-        <a
-          href="https://www.jw.works/"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Jerry Wang
-        </a>
-        ,{' '}
-        <a
-          href="https://ryanyao.design/"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Ryan Yao
-        </a>
-        , and{' '}
-        <a
-          href="https://anthonyung.com/"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Anthony Ung
-        </a>{' '}
-        for reviewing this article, and the design engineering team at{' '}
-        <a
-          href="https://wealthsimple.com/"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Wealthsimple
-        </a>{' '}
-        for inspirations.
-      </p>
     </ArticleLayout>
   );
 };

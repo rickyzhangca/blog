@@ -198,10 +198,19 @@ const ResponsiveZoom = ({ zoom }: { zoom: number }) => {
   return null;
 };
 
+// component that notifies when suspense children have mounted
+const SceneReady = ({ onReady }: { onReady: () => void }) => {
+  useEffect(() => {
+    onReady();
+  }, [onReady]);
+  return null;
+};
+
 export default function SceneR3f() {
   const [isDevMode] = useAtom(isDevModeAtom);
+  const [isSceneReady, setIsSceneReady] = useState(false);
 
-  const [zoom, setZoom] = useState(50);
+  const [zoom, setZoom] = useState(40);
   useEffect(() => {
     if (cameraControlsRef.current) {
       cameraControlsRef.current.zoomTo(zoom, true);
@@ -220,7 +229,12 @@ export default function SceneR3f() {
   const perfContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="relative">
+    <div
+      className={cn(
+        'relative transition-opacity duration-500',
+        isSceneReady ? 'opacity-100' : 'opacity-0'
+      )}
+    >
       {isDevMode && (
         <button
           className={cn(
@@ -231,7 +245,7 @@ export default function SceneR3f() {
           }}
           type="button"
         >
-          Reset
+          Reset rotation
         </button>
       )}
 
@@ -301,6 +315,7 @@ export default function SceneR3f() {
             />
           </group>
           <HitPlane onPoint={(p) => displacementRef.current.copy(p)} />
+          <SceneReady onReady={() => setIsSceneReady(true)} />
         </Suspense>
       </Canvas>
     </div>
