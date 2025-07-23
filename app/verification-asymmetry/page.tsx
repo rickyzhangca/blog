@@ -107,21 +107,23 @@ const VerificationAsymmetry = () => {
       />
       <p>
         This difference isn't just academic - it fundamentally shapes how
-        designers work, what designers value. Tackling this verification
-        asymmetry is why the emergence of design engineers, not AI, is the most
-        important shift in design practice today.
+        designers work, what designers value.
       </p>
       <blockquote>
         Design's core challenge isn't craft - it's verification.
       </blockquote>
+      <p>
+        Tackling this verification asymmetry is why the emergence of design
+        engineers, not AI, is the most important shift in design practice today.
+      </p>
 
       <H2>Verification Asymmetry in Design vs. Engineering</H2>
       <p>Difficulty in verification is undesirable.</p>
       <p>
-        Software engineering has never been just about writing better code -
-        it's also about verifying code quality. Continuous integration turns "it
-        works on my machine" into "it works everywhere." Unit tests transform "I
-        think this works" into "I can prove this works."
+        Take software engineering as an example. It has never been just about
+        writing fancy code - it's also about verifying code quality. Continuous
+        integration turns "it works on my machine" into "it works everywhere."
+        Unit tests transform "I think this works" into "I can prove this works."
       </p>
       <Image
         alt="Verification asymmetry image - 2"
@@ -247,7 +249,7 @@ const VerificationAsymmetry = () => {
         This aligns with the AI’s nature. AI always excels at problems with
         clear verification criteria. AI is best at generating code that either
         passes tests or doesn't. Software engineering tasks has been made
-        dramatically easier to vertify over the past decades (with lint, tests,
+        dramatically easier to verify over the past decades (with lint, tests,
         containerization, metrics, …) so AI spreads out so fast for them.
       </p>
       <p>
@@ -264,8 +266,8 @@ const VerificationAsymmetry = () => {
         for their teams.
       </p>
       <blockquote>
-        The most valuable and long-term disruption AI brought to design industry
-        is the rise of design engineers.
+        The most valuable and long-term impact of AI on the design industry is
+        the rise of design engineers.
       </blockquote>
       <Image
         alt="Verification asymmetry image - 7"
@@ -309,8 +311,8 @@ const VerificationAsymmetry = () => {
       <blockquote>How do we make design decisions more verifiable?</blockquote>
       <p>
         In the past, sometimes the answer is code. Sometimes it's better
-        research methods. Sometimes it's new metrics. Right now in 2025, people
-        are coming to an agreement that the answer is code.
+        research methods. Sometimes it's new metrics. Right now in 2025, more
+        people are coming to the agreement that answer is code.
       </p>
 
       <H2>Future</H2>
