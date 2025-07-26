@@ -1,8 +1,8 @@
+import { generateMetadata as generateOGMetadata } from '@/lib/og-image';
+import { cn } from '@/lib/utils';
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { generateMetadata as generateOGMetadata } from '@/lib/og-image';
-import { cn } from '@/lib/utils';
 import { Footer } from './footer';
 import './globals.css';
 
@@ -16,10 +16,17 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = generateOGMetadata({
-  title: 'Design Engineer Blog',
-  description: 'Thoughts on design and design engineering',
-});
+export const metadata: Metadata = {
+  ...generateOGMetadata({
+    title: 'Design Engineer Blog',
+    description: 'Thoughts on design and design engineering',
+  }),
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
+};
 
 export default function RootLayout({
   children,

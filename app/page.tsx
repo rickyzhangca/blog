@@ -9,7 +9,7 @@ export default function Home() {
       <Divider className="border-t-0" />
       <Scene />
       <Divider />
-      <div className="flex">
+      <div className="flex flex-col">
         {articles.map((article, idx) => (
           <div className="flex-1" key={article.slug}>
             {idx > 0 && <Divider className="h-4" />}
