@@ -1,6 +1,6 @@
-import { ChevronRightIcon } from 'lucide-react';
-import type { ArticleMeta } from '@/lib/articles';
-import { Cover } from './cover';
+import { ChevronRightIcon } from "lucide-react";
+import type { ArticleMeta } from "@/lib/articles";
+import { Cover } from "./cover";
 
 export const ArticleItem = ({ article }: { article: ArticleMeta }) => {
   return (

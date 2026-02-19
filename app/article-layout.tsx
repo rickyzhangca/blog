@@ -1,6 +1,6 @@
-import { BackButton } from './components/back-button';
-import { BackToTopButton } from './components/back-to-top-button';
-import { Divider } from './divider';
+import { BackButton } from "./components/back-button";
+import { BackToTopButton } from "./components/back-to-top-button";
+import { Divider } from "./divider";
 
 export const ArticleLayout = ({
   children,

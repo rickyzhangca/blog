@@ -1,9 +1,9 @@
-import type { Metadata } from 'next';
-import type { ArticleMeta } from './articles';
+import type { Metadata } from "next";
+import type { ArticleMeta } from "./articles";
 
 export interface OGImageParams {
   title?: string;
-  type?: 'article' | 'default';
+  type?: "article" | "default";
   author?: string;
 }
 
@@ -16,23 +16,23 @@ export interface OGImageParams {
 export function generateOGImageUrl(params: OGImageParams): string {
   // Start with the base URL for the OG image endpoint
   const baseUrl = new URL(
-    '/api/og',
-    process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+    "/api/og",
+    process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
   );
 
   // Add title parameter if provided
   if (params.title) {
-    baseUrl.searchParams.append('title', encodeURIComponent(params.title));
+    baseUrl.searchParams.append("title", encodeURIComponent(params.title));
   }
 
   // Add type parameter if provided (article or default)
-  if (params.type && ['article', 'default'].includes(params.type)) {
-    baseUrl.searchParams.append('type', params.type);
+  if (params.type && ["article", "default"].includes(params.type)) {
+    baseUrl.searchParams.append("type", params.type);
   }
 
   // Add author parameter if provided
   if (params.author) {
-    baseUrl.searchParams.append('author', encodeURIComponent(params.author));
+    baseUrl.searchParams.append("author", encodeURIComponent(params.author));
   }
 
   return baseUrl.toString();
@@ -47,7 +47,7 @@ export function generateOGImageUrl(params: OGImageParams): string {
 export function generateArticleOGImageUrl(article: ArticleMeta): string {
   return generateOGImageUrl({
     title: article.title,
-    type: 'article',
+    type: "article",
   });
 }
 
@@ -58,11 +58,11 @@ export function generateArticleOGImageUrl(article: ArticleMeta): string {
  * @returns The fully constructed default OG image URL
  */
 export function generateDefaultOGImageUrl(
-  title = 'Design Engineer Blog'
+  title = "Design Engineer Blog"
 ): string {
   return generateOGImageUrl({
     title,
-    type: 'default',
+    type: "default",
   });
 }
 
@@ -88,7 +88,7 @@ export function generateMetadata(params: GenerateMetadataParams): Metadata {
   // Determine description
   const description =
     customDescription ??
-    (article ? article.description : 'Design Engineer Blog');
+    (article ? article.description : "Design Engineer Blog");
 
   // Generate the appropriate OG image URL
   const ogImageUrl = isArticle
@@ -97,8 +97,8 @@ export function generateMetadata(params: GenerateMetadataParams): Metadata {
 
   // Construct the canonical URL if slug is provided
   const url = params.slug
-    ? `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/${params.slug}`
-    : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    ? `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/${params.slug}`
+    : process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
   // Construct the metadata object with all required tags
   return {
@@ -110,8 +110,8 @@ export function generateMetadata(params: GenerateMetadataParams): Metadata {
     openGraph: {
       title,
       description,
-      siteName: 'Design Engineer Blog',
-      type: isArticle ? 'article' : 'website',
+      siteName: "Design Engineer Blog",
+      type: isArticle ? "article" : "website",
       url,
       images: [
         {
@@ -123,17 +123,17 @@ export function generateMetadata(params: GenerateMetadataParams): Metadata {
       ],
       ...(isArticle && {
         publishedTime: article.published,
-        authors: ['Ricky Zhang'],
+        authors: ["Ricky Zhang"],
       }),
     },
 
     // Twitter Card metadata
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title,
       description,
       images: [ogImageUrl],
-      creator: '@rickyrickyriri',
+      creator: "@rickyrickyriri",
     },
 
     // Canonical URL

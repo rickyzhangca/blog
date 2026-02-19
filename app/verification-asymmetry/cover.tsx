@@ -1,10 +1,6 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
-export const Cover = ({
-  className,
-}: {
-  className?: string;
-}) => (
+export const Cover = ({ className }: { className?: string }) => (
   <svg
     className={className}
     fill="none"
@@ -21,12 +17,12 @@ export const Cover = ({
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
-      transition={{ duration: 1, ease: 'easeInOut' }}
+      transition={{ duration: 1, ease: "easeInOut" }}
     />
     <motion.g
       animate={{ y: -109, scale: 1 }}
       initial={{ y: 0, scale: 0 }}
-      transition={{ duration: 1.05, ease: 'easeInOut' }}
+      transition={{ duration: 1.05, ease: "easeInOut" }}
     >
       <path
         d="M0 -5 L10 0 L0 5 Z"
@@ -42,12 +38,12 @@ export const Cover = ({
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
-      transition={{ duration: 1, ease: 'easeInOut' }}
+      transition={{ duration: 1, ease: "easeInOut" }}
     />
     <motion.g
       animate={{ x: 128, scale: 1 }}
       initial={{ x: 0, scale: 0 }}
-      transition={{ duration: 1.05, ease: 'easeInOut' }}
+      transition={{ duration: 1.05, ease: "easeInOut" }}
     >
       <path
         d="M0 -5 L10 0 L0 5 Z"
@@ -65,7 +61,7 @@ export const Cover = ({
       strokeLinejoin="round"
       strokeOpacity={0.3}
       strokeWidth={2}
-      transition={{ duration: 1, ease: 'easeInOut', delay: 0.2 }}
+      transition={{ duration: 1, ease: "easeInOut", delay: 0.2 }}
     />
   </svg>
 );

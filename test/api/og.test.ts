@@ -1,12 +1,12 @@
-import { ImageResponse } from 'next/og';
-import { NextRequest } from 'next/server';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { ImageResponse } from "next/og";
+import { NextRequest } from "next/server";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 // GET will be dynamically imported after mocks are set up
 let GET: (req: NextRequest) => Promise<Response>;
 
 // Mock the logger module (support both alias and relative import)
-vi.mock('@/lib/logger', () => ({
+vi.mock("@/lib/logger", () => ({
   logError: vi.fn(),
   logInfo: vi.fn(),
   logWarn: vi.fn(),
@@ -20,7 +20,7 @@ vi.mock('@/lib/logger', () => ({
 }));
 
 // Mock the logger module with relative path
-vi.mock('../../lib/logger', () => ({
+vi.mock("../../lib/logger", () => ({
   logError: vi.fn(),
   logInfo: vi.fn(),
   logWarn: vi.fn(),
@@ -34,34 +34,34 @@ vi.mock('../../lib/logger', () => ({
 }));
 
 // Mock the ImageResponse class
-vi.mock('next/og', () => ({
+vi.mock("next/og", () => ({
   ImageResponse: vi.fn().mockImplementation((element, options) => {
     return {
       element,
       options,
       headers: new Headers({
-        'Content-Type': 'image/png',
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        "Content-Type": "image/png",
+        "Cache-Control": "public, max-age=31536000, immutable",
       }),
     };
   }),
 }));
 
-describe('OG Image API Endpoint', () => {
+describe("OG Image API Endpoint", () => {
   // Setup environment and mocks
   beforeAll(async () => {
-    vi.stubEnv('NEXT_PUBLIC_BASE_URL', 'https://example.com');
+    vi.stubEnv("NEXT_PUBLIC_BASE_URL", "https://example.com");
 
     // mock global fetch to avoid real network requests
     globalThis.fetch = vi.fn().mockResolvedValue(
       new Response(new Uint8Array(), {
         status: 200,
-        headers: { 'Content-Type': 'image/png' },
+        headers: { "Content-Type": "image/png" },
       })
     ) as unknown as typeof fetch;
 
     // dynamically import route after mocks
-    const route = await import('../../app/api/og/route');
+    const route = await import("../../app/api/og/route");
     GET = route.GET;
   });
 
@@ -70,10 +70,10 @@ describe('OG Image API Endpoint', () => {
     vi.resetAllMocks();
   });
 
-  describe('GET handler', () => {
-    it('should generate an OG image with default parameters', async () => {
+  describe("GET handler", () => {
+    it("should generate an OG image with default parameters", async () => {
       // Create a mock request
-      const request = new NextRequest('https://example.com/api/og');
+      const request = new NextRequest("https://example.com/api/og");
 
       // Call the GET handler
       const response = await GET(request);
@@ -92,10 +92,10 @@ describe('OG Image API Endpoint', () => {
       expect(element).toBeDefined();
     });
 
-    it('should generate an OG image with type parameter', async () => {
+    it("should generate an OG image with type parameter", async () => {
       // Create a mock request with type parameter
       const request = new NextRequest(
-        'https://example.com/api/og?type=article'
+        "https://example.com/api/og?type=article"
       );
 
       // Call the GET handler
@@ -106,10 +106,10 @@ describe('OG Image API Endpoint', () => {
       expect(ImageResponse).toHaveBeenCalled();
     });
 
-    it('should generate an OG image with author parameter', async () => {
+    it("should generate an OG image with author parameter", async () => {
       // Create a mock request with author parameter
       const request = new NextRequest(
-        'https://example.com/api/og?author=Test%20Author'
+        "https://example.com/api/og?author=Test%20Author"
       );
 
       // Call the GET handler
@@ -120,10 +120,10 @@ describe('OG Image API Endpoint', () => {
       expect(ImageResponse).toHaveBeenCalled();
     });
 
-    it('should generate an OG image with all parameters', async () => {
+    it("should generate an OG image with all parameters", async () => {
       // Create a mock request with all parameters
       const request = new NextRequest(
-        'https://example.com/api/og?title=Test%20Title'
+        "https://example.com/api/og?title=Test%20Title"
       );
 
       // Call the GET handler
@@ -142,7 +142,7 @@ describe('OG Image API Endpoint', () => {
       expect(element).toBeDefined();
     });
 
-    it('should sanitize input parameters', async () => {
+    it("should sanitize input parameters", async () => {
       // Create a mock request with potentially dangerous input
       const request = new NextRequest(
         'https://example.com/api/og?title=<script>alert("XSS")</script>&description=javascript:alert(1)'
@@ -162,19 +162,19 @@ describe('OG Image API Endpoint', () => {
 
       // Convert element to string to check if it sanitized the input
       const elementString = JSON.stringify(element);
-      expect(elementString).not.toContain('<script>');
-      expect(elementString).not.toContain('javascript:');
+      expect(elementString).not.toContain("<script>");
+      expect(elementString).not.toContain("javascript:");
     });
 
-    it('should handle errors gracefully', async () => {
+    it("should handle errors gracefully", async () => {
       // Mock ImageResponse to throw an error
       //@ts-expect-error mocked
       ImageResponse.mockImplementationOnce(() => {
-        throw new Error('Test error');
+        throw new Error("Test error");
       });
 
       // Create a mock request
-      const request = new NextRequest('https://example.com/api/og');
+      const request = new NextRequest("https://example.com/api/og");
 
       // Call the GET handler
       const response = await GET(request);
@@ -183,7 +183,7 @@ describe('OG Image API Endpoint', () => {
       expect(response).toBeDefined();
     });
 
-    it('should handle timeout errors', async () => {
+    it("should handle timeout errors", async () => {
       // Mock a timeout error by making ImageResponse take longer than the timeout
       vi.useFakeTimers();
 
@@ -193,7 +193,7 @@ describe('OG Image API Endpoint', () => {
           setTimeout(() => {
             resolve({
               headers: new Headers({
-                'Content-Type': 'image/png',
+                "Content-Type": "image/png",
               }),
             });
           }, 10_000); // Longer than the timeout
@@ -201,7 +201,7 @@ describe('OG Image API Endpoint', () => {
       });
 
       // Create a mock request
-      const request = new NextRequest('https://example.com/api/og');
+      const request = new NextRequest("https://example.com/api/og");
 
       // Call the GET handler
       const responsePromise = GET(request);

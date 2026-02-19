@@ -1,7 +1,7 @@
-import { articles } from '@/lib/articles';
-import { ArticleItem } from './components/article-item';
-import Scene from './components/scene-r3f';
-import { Divider } from './divider';
+import { articles } from "@/lib/articles";
+import { ArticleItem } from "./components/article-item";
+import Scene from "./components/scene-r3f";
+import { Divider } from "./divider";
 
 export default function Home() {
   return (

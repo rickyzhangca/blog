@@ -1,15 +1,15 @@
-import type { Metadata } from 'next';
-import { generateMetadata as generateOGMetadata } from '@/lib/og-image';
-import { ArticleLayout } from '../article-layout';
-import { Avatar, AvatarFallback, AvatarImage } from '../components/avatar';
-import { H1, H2 } from '../components/h';
-import { Image } from '../components/image';
-import meta from './meta.json' with { type: 'json' };
+import type { Metadata } from "next";
+import { generateMetadata as generateOGMetadata } from "@/lib/og-image";
+import { ArticleLayout } from "../article-layout";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/avatar";
+import { H1, H2 } from "../components/h";
+import { Image } from "../components/image";
+import meta from "./meta.json" with { type: "json" };
 
 export const metadata: Metadata = generateOGMetadata({
   title: meta.title,
-  slug: 'verification-asymmetry',
-  article: { ...meta, slug: 'verification-asymmetry' },
+  slug: "verification-asymmetry",
+  article: { ...meta, slug: "verification-asymmetry" },
 });
 
 const VerificationAsymmetry = () => {
@@ -17,7 +17,7 @@ const VerificationAsymmetry = () => {
     <ArticleLayout
       credit={
         <>
-          <div className="not-prose -space-x-3 flex w-fit transition-all hover:space-x-1.5">
+          <div className="not-prose flex w-fit -space-x-3 transition-all hover:space-x-1.5">
             <Avatar>
               <AvatarImage src="/verification-asymmetry/jerry-wang.webp" />
               <AvatarFallback>JW</AvatarFallback>
@@ -32,7 +32,7 @@ const VerificationAsymmetry = () => {
             </Avatar>
           </div>
           <p>
-            Thanks to{' '}
+            Thanks to{" "}
             <a
               href="https://www.jw.works/"
               rel="noopener noreferrer"
@@ -40,7 +40,7 @@ const VerificationAsymmetry = () => {
             >
               Jerry Wang
             </a>
-            ,{' '}
+            ,{" "}
             <a
               href="https://ryanyao.design/"
               rel="noopener noreferrer"
@@ -48,22 +48,22 @@ const VerificationAsymmetry = () => {
             >
               Ryan Yao
             </a>
-            , and{' '}
+            , and{" "}
             <a
               href="https://anthonyung.com/"
               rel="noopener noreferrer"
               target="_blank"
             >
               Anthony Ung
-            </a>{' '}
-            for reviewing this article, and the design engineering team at{' '}
+            </a>{" "}
+            for reviewing this article, and the design engineering team at{" "}
             <a
               href="https://wealthsimple.com/"
               rel="noopener noreferrer"
               target="_blank"
             >
               Wealthsimple
-            </a>{' '}
+            </a>{" "}
             for inspirations.
           </p>
         </>

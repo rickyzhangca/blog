@@ -1,16 +1,16 @@
 /** biome-ignore-all lint/performance/noImgElement: this is og image */
 
-import { ImageResponse } from 'next/og';
-import type { NextRequest } from 'next/server';
+import { ImageResponse } from "next/og";
+import type { NextRequest } from "next/server";
 import {
   logError,
   logInfo,
   logWarn,
   startPerformanceMonitoring,
-} from '@/lib/logger';
+} from "@/lib/logger";
 
 // Set runtime to edge for optimal performance
-export const runtime = 'edge';
+export const runtime = "edge";
 
 // Set revalidation time for static regeneration (0 = always revalidate)
 export const revalidate = 31_536_000; // 1 year in seconds
@@ -18,25 +18,25 @@ export const revalidate = 31_536_000; // 1 year in seconds
 // Performance optimization: Cache color schemes and common configurations
 const COLOR_SCHEMES = {
   light: {
-    background: '#FFFFFF',
-    foreground: '#252525',
-    border: '#EBEBEB',
-    muted: '#8D8D8D',
-    accent: '#252525',
+    background: "#FFFFFF",
+    foreground: "#252525",
+    border: "#EBEBEB",
+    muted: "#8D8D8D",
+    accent: "#252525",
   },
   dark: {
-    background: '#1A1A1A',
-    foreground: '#F5F5F5',
-    border: '#333333',
-    muted: '#A8A8A8',
-    accent: '#5B8DEF',
+    background: "#1A1A1A",
+    foreground: "#F5F5F5",
+    border: "#333333",
+    muted: "#A8A8A8",
+    accent: "#5B8DEF",
   },
   article: {
-    background: '#FFFFFF',
-    foreground: '#252525',
-    border: '#EBEBEB',
-    muted: '#8D8D8D',
-    accent: '#5B8DEF',
+    background: "#FFFFFF",
+    foreground: "#252525",
+    border: "#EBEBEB",
+    muted: "#8D8D8D",
+    accent: "#5B8DEF",
   },
 } as const;
 
@@ -48,9 +48,9 @@ const OG_DIMENSIONS = {
 
 // Cache control constants for better reuse and consistency
 const CACHE_CONTROL = {
-  LONG: 'public, max-age=31536000, s-maxage=31536000, stale-while-revalidate=86400, immutable',
-  SHORT: 'public, max-age=300, s-maxage=300, stale-while-revalidate=60',
-  NONE: 'no-store, max-age=0, must-revalidate',
+  LONG: "public, max-age=31536000, s-maxage=31536000, stale-while-revalidate=86400, immutable",
+  SHORT: "public, max-age=300, s-maxage=300, stale-while-revalidate=60",
+  NONE: "no-store, max-age=0, must-revalidate",
 } as const;
 
 // lazily fetch logo and cache as base64 data url (satori only renders data URIs reliably)
@@ -62,20 +62,20 @@ async function getLogoSrc(): Promise<string> {
   }
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/logo.png`
+      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/logo.png`
     );
 
     const arrayBuffer = await res.arrayBuffer();
-    cachedLogoSrc = `data:image/png;base64,${Buffer.from(arrayBuffer).toString('base64')}`;
+    cachedLogoSrc = `data:image/png;base64,${Buffer.from(arrayBuffer).toString("base64")}`;
     return cachedLogoSrc;
   } catch (error) {
     // fallback to transparent png data uri (1x1)
     cachedLogoSrc =
-      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO2S9FYAAAAASUVORK5CYII=';
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO2S9FYAAAAASUVORK5CYII=";
     logWarn(
-      'failed to fetch logo for og image, using transparent placeholder',
+      "failed to fetch logo for og image, using transparent placeholder",
       {
-        error: error instanceof Error ? error.message : 'unknown',
+        error: error instanceof Error ? error.message : "unknown",
       }
     );
     return cachedLogoSrc;
@@ -87,21 +87,21 @@ async function createDefaultOgImage(): Promise<ImageResponse> {
   return new ImageResponse(
     <div
       style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#FFFFFF',
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#FFFFFF",
       }}
     >
       <img
         alt="logo"
         src={logoSrc}
         style={{
-          width: '80%',
-          height: '80%',
-          transform: 'translateX(-25px) translateY(5px)',
+          width: "80%",
+          height: "80%",
+          transform: "translateX(-25px) translateY(5px)",
         }}
       />
     </div>,
@@ -109,10 +109,10 @@ async function createDefaultOgImage(): Promise<ImageResponse> {
       width: 1200,
       height: 630,
       headers: {
-        'Cache-Control': CACHE_CONTROL.SHORT,
-        'Content-Type': 'image/png',
-        Vary: 'Accept',
-        'X-Image-Type': 'fallback',
+        "Cache-Control": CACHE_CONTROL.SHORT,
+        "Content-Type": "image/png",
+        Vary: "Accept",
+        "X-Image-Type": "fallback",
       },
     }
   );
@@ -129,27 +129,27 @@ async function createDefaultOgImage(): Promise<ImageResponse> {
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: it's readable
 export async function GET(request: NextRequest) {
   // Start performance monitoring for the entire request
-  const perfMonitor = startPerformanceMonitoring('og-image-generation');
+  const perfMonitor = startPerformanceMonitoring("og-image-generation");
 
   // Log the incoming request
-  logInfo('OG Image request received', {
+  logInfo("OG Image request received", {
     url: request.url,
-    userAgent: request.headers.get('user-agent') || 'unknown',
-    referer: request.headers.get('referer') || 'unknown',
+    userAgent: request.headers.get("user-agent") || "unknown",
+    referer: request.headers.get("referer") || "unknown",
   });
 
-  const isDev = process.env.NODE_ENV !== 'production';
+  const isDev = process.env.NODE_ENV !== "production";
 
   // Check for conditional requests (If-None-Match header) only in production to speed up local development
   if (!isDev) {
-    const ifNoneMatch = request.headers.get('If-None-Match');
-    const cacheKey = `"${Buffer.from(request.url).toString('base64')}"`;
+    const ifNoneMatch = request.headers.get("If-None-Match");
+    const cacheKey = `"${Buffer.from(request.url).toString("base64")}"`;
     if (ifNoneMatch === cacheKey) {
-      logInfo('Cache hit: returning 304 Not Modified', { cacheKey });
+      logInfo("Cache hit: returning 304 Not Modified", { cacheKey });
       return new Response(null, {
         status: 304,
         headers: {
-          'Cache-Control': CACHE_CONTROL.LONG,
+          "Cache-Control": CACHE_CONTROL.LONG,
           ETag: cacheKey,
         },
       });
@@ -177,29 +177,29 @@ export async function GET(request: NextRequest) {
 
     // Log successful generation
     const duration = perfMonitor.end({ url: request.url });
-    logInfo('OG Image generated successfully', {
+    logInfo("OG Image generated successfully", {
       url: request.url,
       duration,
-      contentType: response.headers.get('Content-Type'),
-      cacheControl: response.headers.get('Cache-Control'),
+      contentType: response.headers.get("Content-Type"),
+      cacheControl: response.headers.get("Cache-Control"),
     });
 
     return response;
   } catch (error) {
     // Log the error for debugging purposes
     const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error';
-    const isTimeout = errorMessage.includes('timed out');
+      error instanceof Error ? error.message : "Unknown error";
+    const isTimeout = errorMessage.includes("timed out");
 
     if (isTimeout) {
-      logWarn('OG Image generation timed out', {
+      logWarn("OG Image generation timed out", {
         url: request.url,
         timeout: TIMEOUT_MS,
         error: errorMessage,
       });
     } else {
       logError(
-        'OG Image generation error',
+        "OG Image generation error",
         {
           url: request.url,
         },
@@ -209,12 +209,12 @@ export async function GET(request: NextRequest) {
 
     // Create a fallback image with default branding (requirement 2.4, 3.3)
     try {
-      logInfo('Attempting to generate fallback image');
+      logInfo("Attempting to generate fallback image");
       const fallbackResponse = await createFallbackImage();
 
       // Log fallback success
       const duration = perfMonitor.end({ url: request.url, fallback: true });
-      logInfo('Fallback image generated successfully', {
+      logInfo("Fallback image generated successfully", {
         url: request.url,
         duration,
         fallback: true,
@@ -226,10 +226,10 @@ export async function GET(request: NextRequest) {
       const fallbackErrorMessage =
         fallbackError instanceof Error
           ? fallbackError.message
-          : 'Unknown error';
+          : "Unknown error";
 
       logError(
-        'Fallback image generation failed',
+        "Fallback image generation failed",
         {
           url: request.url,
           originalError: errorMessage,
@@ -242,12 +242,12 @@ export async function GET(request: NextRequest) {
       // Return a simple error response with appropriate headers
       perfMonitor.end({ url: request.url, failed: true });
 
-      return new Response('Error generating image', {
+      return new Response("Error generating image", {
         status: 500,
         headers: {
-          'Content-Type': 'text/plain',
-          'Cache-Control': CACHE_CONTROL.NONE,
-          'X-Error': 'Failed to generate OG image',
+          "Content-Type": "text/plain",
+          "Cache-Control": CACHE_CONTROL.NONE,
+          "X-Error": "Failed to generate OG image",
         },
       });
     }
@@ -263,38 +263,38 @@ export async function GET(request: NextRequest) {
 async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
   const logoSrc = await getLogoSrc();
   // Start performance monitoring for image generation
-  const perfMonitor = startPerformanceMonitoring('og-image-render');
+  const perfMonitor = startPerformanceMonitoring("og-image-render");
 
   // Parse the request URL and extract query parameters
   const url = new URL(request.url);
 
   // Extract and sanitize title parameter with validation (requirement 2.1, 2.2, 2.4)
-  const title = sanitizeInput(url.searchParams.get('title'), {
+  const title = sanitizeInput(url.searchParams.get("title"), {
     maxLength: 100, // Limit title length for visual balance
     minLength: 3, // Require at least 3 characters for a meaningful title
-    defaultValue: 'Design Engineer Blog',
+    defaultValue: "Design Engineer Blog",
     allowedChars: /[A-Za-z0-9\s.,!?:;'"()[\]{}\-_+=&%$#@]/g, // Allow common text characters
   });
 
   // Extract and validate content type parameter (article or default)
-  const typeParam = url.searchParams.get('type');
-  const type = ['article', 'default'].includes(typeParam || '')
+  const typeParam = url.searchParams.get("type");
+  const type = ["article", "default"].includes(typeParam || "")
     ? typeParam
-    : 'default';
+    : "default";
 
   // Extract and sanitize author parameter (optional)
-  const author = sanitizeInput(url.searchParams.get('author'), {
+  const author = sanitizeInput(url.searchParams.get("author"), {
     maxLength: 50,
-    defaultValue: 'Ricky Zhang',
+    defaultValue: "Ricky Zhang",
     allowedChars: /[A-Za-z0-9\s.\-_]/g, // More restrictive for author names
   });
 
   // Log parameter validation results
-  logInfo('OG Image parameters processed', {
-    title: title !== url.searchParams.get('title') ? 'sanitized' : 'unchanged',
+  logInfo("OG Image parameters processed", {
+    title: title !== url.searchParams.get("title") ? "sanitized" : "unchanged",
     type,
     author:
-      author !== url.searchParams.get('author') ? 'sanitized' : 'unchanged',
+      author !== url.searchParams.get("author") ? "sanitized" : "unchanged",
     titleLength: title.length,
   });
 
@@ -302,28 +302,28 @@ async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
   const { width, height } = OG_DIMENSIONS;
 
   // Use cached color scheme (no theme switch needed)
-  const colorScheme = type === 'article' ? 'article' : 'default';
+  const colorScheme = type === "article" ? "article" : "default";
   const colors = COLOR_SCHEMES[colorScheme as keyof typeof COLOR_SCHEMES];
 
   // Wrap the actual image generation in another try-catch for more granular error handling
   try {
     // Log the start of image rendering
-    logInfo('Starting OG image rendering', {
+    logInfo("Starting OG image rendering", {
       type,
       colorScheme,
       dimensions: `${width}x${height}`,
     });
 
     // article OG: logo and title only
-    if (type === 'article') {
+    if (type === "article") {
       const imageResponse = await new ImageResponse(
         <div
           style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
             backgroundColor: colors.background,
           }}
         >
@@ -331,32 +331,32 @@ async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
             alt="logo"
             src={logoSrc}
             style={{
-              height: '240px',
-              margin: '40px',
-              transform: 'translateX(-15px) translateY(5px)',
+              height: "240px",
+              margin: "40px",
+              transform: "translateX(-15px) translateY(5px)",
             }}
           />
           <div
             style={{
-              display: 'flex',
+              display: "flex",
               flex: 1,
-              alignItems: 'center',
-              width: '100%',
-              padding: '50px 60px',
+              alignItems: "center",
+              width: "100%",
+              padding: "50px 60px",
               backgroundColor: colors.foreground,
             }}
           >
             <h1
               style={{
-                fontSize: '88px',
+                fontSize: "88px",
                 color: colors.background,
                 margin: 0,
                 lineHeight: 1.2,
-                display: '-webkit-box',
+                display: "-webkit-box",
                 WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             >
               {title}
@@ -367,30 +367,30 @@ async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
           width,
           height,
           headers: {
-            'Cache-Control': CACHE_CONTROL.SHORT,
+            "Cache-Control": CACHE_CONTROL.SHORT,
           },
         }
       );
       const durationArticle = perfMonitor.end();
-      logInfo('Article OG image rendered', { duration: durationArticle });
+      logInfo("Article OG image rendered", { duration: durationArticle });
       return imageResponse;
     }
 
     const imageResponse = await createDefaultOgImage();
 
     const duration = perfMonitor.end();
-    imageResponse.headers.set('Server-Timing', `gen;dur=${duration}`);
-    logInfo('OG image rendered', { duration });
+    imageResponse.headers.set("Server-Timing", `gen;dur=${duration}`);
+    logInfo("OG image rendered", { duration });
 
     return imageResponse;
   } catch (renderError) {
     // Handle specific rendering errors
     const errorMessage =
-      renderError instanceof Error ? renderError.message : 'Unknown error';
+      renderError instanceof Error ? renderError.message : "Unknown error";
 
     // Log the error with detailed context
     logError(
-      'OG Image rendering error',
+      "OG Image rendering error",
       {
         type,
         titleLength: title.length,
@@ -413,29 +413,29 @@ async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
  */
 async function createFallbackImage(): Promise<ImageResponse> {
   // Start performance monitoring for fallback image generation
-  const perfMonitor = startPerformanceMonitoring('og-fallback-image');
+  const perfMonitor = startPerformanceMonitoring("og-fallback-image");
 
-  logInfo('Generating fallback OG image');
+  logInfo("Generating fallback OG image");
 
   try {
     const fallbackResponse = await createDefaultOgImage();
 
     // Add fallback-specific cache headers
-    fallbackResponse.headers.set('Cache-Control', CACHE_CONTROL.SHORT);
-    fallbackResponse.headers.set('Vary', 'Accept');
-    fallbackResponse.headers.set('X-Image-Type', 'fallback');
+    fallbackResponse.headers.set("Cache-Control", CACHE_CONTROL.SHORT);
+    fallbackResponse.headers.set("Vary", "Accept");
+    fallbackResponse.headers.set("X-Image-Type", "fallback");
 
     // Log successful fallback generation
     const duration = perfMonitor.end();
-    logInfo('Fallback image generated successfully', { duration });
+    logInfo("Fallback image generated successfully", { duration });
 
     return fallbackResponse;
   } catch (error) {
     // Log error in fallback generation
     const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error';
+      error instanceof Error ? error.message : "Unknown error";
     logError(
-      'Fallback image generation failed',
+      "Fallback image generation failed",
       {},
       error instanceof Error ? error : new Error(errorMessage)
     );
@@ -470,9 +470,9 @@ function sanitizeInput(
   const {
     maxLength = 200,
     minLength = 0,
-    defaultValue = '',
+    defaultValue = "",
     allowedChars,
-    paramName = 'parameter',
+    paramName = "parameter",
   } = options;
 
   // Handle null, undefined or empty input
@@ -510,10 +510,10 @@ function sanitizeInput(
 
   // Check for HTML tags
   const originalBeforeHtmlRemoval = sanitized;
-  sanitized = sanitized.replace(/<[^>]*>/g, '');
+  sanitized = sanitized.replace(/<[^>]*>/g, "");
 
   if (sanitized !== originalBeforeHtmlRemoval) {
-    validationIssues.push('html_tags_removed');
+    validationIssues.push("html_tags_removed");
     wasModified = true;
   }
 
@@ -523,14 +523,14 @@ function sanitizeInput(
     const matches = sanitized.match(allowedChars);
 
     if (matches) {
-      const filtered = matches.join('');
+      const filtered = matches.join("");
       if (filtered !== originalBeforeCharFiltering) {
-        validationIssues.push('invalid_chars_removed');
+        validationIssues.push("invalid_chars_removed");
         sanitized = filtered;
         wasModified = true;
       }
     } else {
-      validationIssues.push('no_valid_chars');
+      validationIssues.push("no_valid_chars");
       sanitized = defaultValue;
       wasModified = true;
     }
@@ -539,12 +539,12 @@ function sanitizeInput(
   // Check for potentially dangerous patterns
   const originalBeforeDangerousPatterns = sanitized;
   sanitized = sanitized
-    .replace(/javascript:/gi, '')
-    .replace(/data:/gi, '')
-    .replace(/vbscript:/gi, '');
+    .replace(/javascript:/gi, "")
+    .replace(/data:/gi, "")
+    .replace(/vbscript:/gi, "");
 
   if (sanitized !== originalBeforeDangerousPatterns) {
-    validationIssues.push('dangerous_patterns_removed');
+    validationIssues.push("dangerous_patterns_removed");
     wasModified = true;
   }
 

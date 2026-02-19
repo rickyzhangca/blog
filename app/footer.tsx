@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useAtom } from 'jotai';
-import { ArrowUpRightIcon, WrenchIcon } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
-import { isDevModeAtom } from './atoms';
-import { Divider } from './divider';
+import { useAtom } from "jotai";
+import { ArrowUpRightIcon, WrenchIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { isDevModeAtom } from "./atoms";
+import { Divider } from "./divider";
 
 export const Footer = () => {
   const [isDevMode, setIsDevMode] = useAtom(isDevModeAtom);
@@ -14,13 +14,13 @@ export const Footer = () => {
   return (
     <Divider className="h-28 border-b-0 sm:h-36">
       <div className="flex items-center justify-between gap-2">
-        {pathname === '/' && (
+        {pathname === "/" && (
           <button
             className={cn(
-              'cursor-pointer border p-2.5 transition',
+              "cursor-pointer border p-2.5 transition",
               isDevMode
-                ? 'border-transparent bg-foreground text-background'
-                : 'bg-background text-foreground/40 hover:border-foreground/30 hover:text-foreground/60'
+                ? "border-transparent bg-foreground text-background"
+                : "bg-background text-foreground/40 hover:border-foreground/30 hover:text-foreground/60"
             )}
             onClick={() => {
               setIsDevMode(!isDevMode);

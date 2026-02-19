@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
 import {
   CameraControls,
   GizmoHelper,
   GizmoViewport,
   Stats,
-} from '@react-three/drei';
-import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
-import { useAtom } from 'jotai';
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import type { Mesh } from 'three';
-import { DoubleSide, ShaderMaterial, TextureLoader, Vector3 } from 'three';
+} from "@react-three/drei";
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
+import { useAtom } from "jotai";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import type { Mesh } from "three";
+import { DoubleSide, ShaderMaterial, TextureLoader, Vector3 } from "three";
 
-import { cn } from '@/lib/utils';
-import { isDevModeAtom } from '../atoms';
-import shadowPng from './shadow.png';
-import texturePng from './texture.png';
+import { cn } from "@/lib/utils";
+import { isDevModeAtom } from "../atoms";
+import shadowPng from "./shadow.png";
+import texturePng from "./texture.png";
 
 const PointerSphere = ({
   displacementRef,
@@ -219,8 +219,8 @@ export default function SceneR3f() {
   useEffect(() => {
     const handler = () => setZoom(calcZoom(window.innerWidth));
     handler();
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
   }, []);
 
   const displacementRef = useRef<Vector3>(new Vector3(10, 10, 0));
@@ -231,14 +231,14 @@ export default function SceneR3f() {
   return (
     <div
       className={cn(
-        'relative transition-opacity duration-500',
-        isSceneReady ? 'opacity-100' : 'opacity-0'
+        "relative transition-opacity duration-500",
+        isSceneReady ? "opacity-100" : "opacity-0"
       )}
     >
       {isDevMode && (
         <button
           className={cn(
-            'absolute bottom-4 left-4 z-10 cursor-pointer rounded-full bg-black/3 px-4 py-2 font-medium text-foreground/70 text-sm transition hover:bg-black/5'
+            "absolute bottom-4 left-4 z-10 cursor-pointer rounded-full bg-black/3 px-4 py-2 font-medium text-foreground/70 text-sm transition hover:bg-black/5"
           )}
           onClick={() => {
             cameraControlsRef.current?.setLookAt(0, -8, 6, 0, 0, 0, true);
@@ -293,7 +293,7 @@ export default function SceneR3f() {
         {isDevMode && (
           <GizmoHelper alignment="bottom-right" margin={[64, 64]}>
             <GizmoViewport
-              axisColors={['#9d4b4b', '#2f7f4f', '#3b5b9d']}
+              axisColors={["#9d4b4b", "#2f7f4f", "#3b5b9d"]}
               labelColor="white"
             />
           </GizmoHelper>
