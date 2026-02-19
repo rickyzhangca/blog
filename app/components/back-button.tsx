@@ -3,20 +3,21 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-type BackButtonProps = {
+interface BackButtonProps {
   className?: string;
-};
+  href?: string;
+}
 
-export const BackButton = ({ className }: BackButtonProps) => {
+export function BackButton({ className, href = "/" }: BackButtonProps) {
   return (
     <Link
       className={cn(
         "flex items-center justify-center border bg-white px-4 py-3 text-foreground",
         className
       )}
-      href="/"
+      href={href}
     >
       Back
     </Link>
   );
-};
+}

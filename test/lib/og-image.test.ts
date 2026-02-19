@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import type { ArticleMeta } from "../../lib/articles";
+import type { ArticleMetaForLocale } from "../../lib/articles";
 import {
   type GenerateMetadataParams,
   generateArticleOGImageUrl,
@@ -68,21 +68,19 @@ describe("OG Image URL Generation", () => {
     });
 
     it("should use localhost when NEXT_PUBLIC_BASE_URL is not available", () => {
-      // Temporarily override the environment variable
       vi.unstubAllEnvs();
 
       const params: OGImageParams = { title: "Test Title" };
       const url = generateOGImageUrl(params);
       expect(url).toContain("http://localhost:3000/api/og");
 
-      // Restore the mock for other tests
       vi.stubEnv("NEXT_PUBLIC_BASE_URL", "https://example.com");
     });
   });
 
   describe("generateArticleOGImageUrl", () => {
     it("should generate an article OG image URL with article metadata", () => {
-      const article: ArticleMeta = {
+      const article: ArticleMetaForLocale = {
         slug: "test-article",
         title: "Test Article",
         description: "This is a test article",
@@ -92,6 +90,20 @@ describe("OG Image URL Generation", () => {
       const url = generateArticleOGImageUrl(article);
       expect(url).toContain("title=");
       expect(new URL(url).searchParams.get("title")).toBe("Test Article");
+      expect(url).toContain("type=article");
+    });
+
+    it("should generate an article OG image URL with Chinese title", () => {
+      const article: ArticleMetaForLocale = {
+        slug: "test-article",
+        title: "验证不对称",
+        description: "这是一篇测试文章",
+        published: "2025-07-01",
+      };
+
+      const url = generateArticleOGImageUrl(article);
+      expect(url).toContain("title=");
+      expect(new URL(url).searchParams.get("title")).toBe("验证不对称");
       expect(url).toContain("type=article");
     });
   });
@@ -128,7 +140,6 @@ describe("Metadata Generation", () => {
       // @ts-expect-error false alarm
       expect(metadata.openGraph?.type).toBe("website");
 
-      // Check image dimensions if available
       const ogImage = metadata.openGraph?.images;
       if (Array.isArray(ogImage) && ogImage.length > 0) {
         // @ts-expect-error false alarm
@@ -140,7 +151,6 @@ describe("Metadata Generation", () => {
       // @ts-expect-error false alarm
       expect(metadata.twitter?.card).toBe("summary_large_image");
 
-      // verify descriptions and site name
       expect(metadata.description).toBe("Design Engineer Blog");
       expect(metadata.openGraph?.description).toBe("Design Engineer Blog");
       expect(metadata.openGraph?.siteName).toBe("Design Engineer Blog");
@@ -148,7 +158,7 @@ describe("Metadata Generation", () => {
     });
 
     it("should generate metadata for an article page", () => {
-      const article: ArticleMeta = {
+      const article: ArticleMetaForLocale = {
         slug: "test-article",
         title: "Test Article",
         description: "This is a test article",
@@ -165,19 +175,16 @@ describe("Metadata Generation", () => {
 
       expect(metadata.title).toBe("Test Article");
 
-      // Check article-specific metadata
       const openGraph = metadata.openGraph;
       // @ts-expect-error false alarm
       expect(openGraph?.type).toBe("article");
 
-      // These properties might be type-specific, so we'll check them safely
       const ogArticle = openGraph;
       // @ts-expect-error false alarm
       expect(ogArticle?.publishedTime).toBe("2025-07-01");
       // @ts-expect-error false alarm
       expect(ogArticle?.authors).toContain("Ricky Zhang");
 
-      // verify descriptions and site name for article
       expect(metadata.description).toBe(article.description);
       expect(metadata.openGraph?.description).toBe(article.description);
       expect(metadata.openGraph?.siteName).toBe("Design Engineer Blog");
@@ -201,6 +208,44 @@ describe("Metadata Generation", () => {
 
       const metadata = generateMetadata(params);
       expect(metadata.alternates?.canonical).toBeTruthy();
+    });
+
+    it("should include language alternates for localized content", () => {
+      const params: GenerateMetadataParams = {
+        title: "Test Page",
+        slug: "test-article",
+        locale: "en",
+      };
+
+      const metadata = generateMetadata(params);
+      const languages = metadata.alternates?.languages;
+
+      expect(languages).toBeDefined();
+      expect(languages?.en).toBe("https://example.com/en/test-article");
+      expect(languages?.["zh-CN"]).toBe("https://example.com/cn/test-article");
+      expect(languages?.["x-default"]).toBe(
+        "https://example.com/en/test-article"
+      );
+    });
+
+    it("should include correct locale in OpenGraph metadata", () => {
+      const params: GenerateMetadataParams = {
+        title: "Test Page",
+        locale: "cn",
+      };
+
+      const metadata = generateMetadata(params);
+      expect(metadata.openGraph?.locale).toBe("zh-CN");
+    });
+
+    it("should include correct locale for en in OpenGraph metadata", () => {
+      const params: GenerateMetadataParams = {
+        title: "Test Page",
+        locale: "en",
+      };
+
+      const metadata = generateMetadata(params);
+      expect(metadata.openGraph?.locale).toBe("en");
     });
   });
 });

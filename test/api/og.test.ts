@@ -237,5 +237,38 @@ describe("OG Image API Endpoint", () => {
       expect(response).toBeDefined();
       expect(ImageResponse).toHaveBeenCalled();
     });
+
+    it("should preserve Chinese characters in title", async () => {
+      const chineseTitle = "验证不对称";
+      const encodedTitle = encodeURIComponent(chineseTitle);
+      const request = new NextRequest(
+        `https://example.com/api/og?type=article&title=${encodedTitle}`
+      );
+
+      const parsedUrl = new URL(request.url);
+      expect(parsedUrl.searchParams.get("title")).toBe(chineseTitle);
+      expect(parsedUrl.searchParams.get("type")).toBe("article");
+
+      const response = await GET(request);
+
+      expect(response).toBeDefined();
+      expect(ImageResponse).toHaveBeenCalled();
+    });
+
+    it("should handle mixed Chinese and English characters", async () => {
+      const mixedTitle = "Verification 不对称 Test 测试";
+      const encodedTitle = encodeURIComponent(mixedTitle);
+      const request = new NextRequest(
+        `https://example.com/api/og?type=article&title=${encodedTitle}`
+      );
+
+      const parsedUrl = new URL(request.url);
+      expect(parsedUrl.searchParams.get("title")).toBe(mixedTitle);
+
+      const response = await GET(request);
+
+      expect(response).toBeDefined();
+      expect(ImageResponse).toHaveBeenCalled();
+    });
   });
 });

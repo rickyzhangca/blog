@@ -1,12 +1,21 @@
 import { ChevronRightIcon } from "lucide-react";
-import type { ArticleMeta } from "@/lib/articles";
+import type { ArticleMetaForLocale } from "@/lib/articles";
+import type { Locale } from "@/lib/i18n";
+import { getArticlePath } from "@/lib/i18n";
 import { Cover } from "./cover";
 
-export const ArticleItem = ({ article }: { article: ArticleMeta }) => {
+interface ArticleItemProps {
+  article: ArticleMetaForLocale;
+  locale: Locale;
+}
+
+export function ArticleItem({ article, locale }: ArticleItemProps) {
+  const href = getArticlePath(article.slug, locale);
+
   return (
     <a
       className="flex items-center justify-between gap-2 p-2 xs:p-4"
-      href={`/${article.slug}`}
+      href={href}
     >
       <div className="flex flex-1 xs:flex-row flex-col items-center xs:gap-6">
         <Cover id={article.slug} />
@@ -18,4 +27,4 @@ export const ArticleItem = ({ article }: { article: ArticleMeta }) => {
       <ChevronRightIcon className="xs:block hidden text-foreground/40" />
     </a>
   );
-};
+}

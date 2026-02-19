@@ -273,7 +273,8 @@ async function generateOGImage(request: NextRequest): Promise<ImageResponse> {
     maxLength: 100, // Limit title length for visual balance
     minLength: 3, // Require at least 3 characters for a meaningful title
     defaultValue: "Design Engineer Blog",
-    allowedChars: /[A-Za-z0-9\s.,!?:;'"()[\]{}\-_+=&%$#@]/g, // Allow common text characters
+    allowedChars:
+      /[A-Za-z0-9\s.,!?:;'"()[\]{}\-_+=&%$#\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/g, // Allow common text characters + CJK
   });
 
   // Extract and validate content type parameter (article or default)

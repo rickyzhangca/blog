@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import type { ArticleMeta } from "./articles";
+import type { ArticleMetaForLocale } from "./articles";
+import type { Locale } from "./i18n";
+import { getLocaleHrefLang } from "./i18n";
 
 export interface OGImageParams {
   author?: string;
@@ -7,30 +9,20 @@ export interface OGImageParams {
   type?: "article" | "default";
 }
 
-/**
- * Generates an OG image URL with properly encoded parameters
- *
- * @param params - Parameters for the OG image
- * @returns The fully constructed OG image URL
- */
 export function generateOGImageUrl(params: OGImageParams): string {
-  // Start with the base URL for the OG image endpoint
   const baseUrl = new URL(
     "/api/og",
     process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
   );
 
-  // Add title parameter if provided
   if (params.title) {
     baseUrl.searchParams.append("title", params.title);
   }
 
-  // Add type parameter if provided (article or default)
   if (params.type && ["article", "default"].includes(params.type)) {
     baseUrl.searchParams.append("type", params.type);
   }
 
-  // Add author parameter if provided
   if (params.author) {
     baseUrl.searchParams.append("author", params.author);
   }
@@ -38,25 +30,15 @@ export function generateOGImageUrl(params: OGImageParams): string {
   return baseUrl.toString();
 }
 
-/**
- * Generates an OG image URL specifically for an article
- *
- * @param article - The article metadata
- * @returns The fully constructed OG image URL for the article
- */
-export function generateArticleOGImageUrl(article: ArticleMeta): string {
+export function generateArticleOGImageUrl(
+  article: ArticleMetaForLocale
+): string {
   return generateOGImageUrl({
     title: article.title,
     type: "article",
   });
 }
 
-/**
- * Generates a default OG image URL for pages without specific metadata
- *
- * @param title - Optional title override
- * @returns The fully constructed default OG image URL
- */
 export function generateDefaultOGImageUrl(
   title = "Design Engineer Blog"
 ): string {
@@ -67,52 +49,48 @@ export function generateDefaultOGImageUrl(
 }
 
 export interface GenerateMetadataParams {
-  article?: ArticleMeta;
+  article?: ArticleMetaForLocale;
   description?: string;
+  locale?: Locale;
   slug?: string;
   title: string;
 }
 
-/**
- * Generates a Next.js Metadata object with OG image and other social meta tags
- *
- * @param params - Parameters for metadata generation
- * @returns A Next.js Metadata object with OG image and other social meta tags
- */
 export function generateMetadata(params: GenerateMetadataParams): Metadata {
-  const { title, article, description: customDescription } = params;
+  const {
+    title,
+    article,
+    description: customDescription,
+    locale = "en",
+  } = params;
 
-  // Determine if this is an article page or a regular page
   const isArticle = !!article;
 
-  // Determine description
   const description =
     customDescription ??
     (article ? article.description : "Design Engineer Blog");
 
-  // Generate the appropriate OG image URL
   const ogImageUrl = isArticle
     ? generateArticleOGImageUrl(article)
     : generateDefaultOGImageUrl(title);
 
-  // Construct the canonical URL if slug is provided
-  const url = params.slug
-    ? `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/${params.slug}`
-    : process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const url = params.slug ? `${baseUrl}/${params.slug}` : baseUrl;
 
-  // Construct the metadata object with all required tags
+  const alternateLocales: Locale[] =
+    locale === "en" ? ["en", "cn"] : ["cn", "en"];
+
   return {
-    // Basic metadata
     title,
     description,
 
-    // Open Graph metadata
     openGraph: {
       title,
       description,
       siteName: "Design Engineer Blog",
       type: isArticle ? "article" : "website",
       url,
+      locale: getLocaleHrefLang(locale),
       images: [
         {
           url: ogImageUrl,
@@ -127,7 +105,6 @@ export function generateMetadata(params: GenerateMetadataParams): Metadata {
       }),
     },
 
-    // Twitter Card metadata
     twitter: {
       card: "summary_large_image",
       title,
@@ -136,9 +113,19 @@ export function generateMetadata(params: GenerateMetadataParams): Metadata {
       creator: "@rickyrickyriri",
     },
 
-    // Canonical URL
     alternates: {
       canonical: url,
+      languages: {
+        [getLocaleHrefLang(alternateLocales[0])]: params.slug
+          ? `${baseUrl}/${alternateLocales[0]}/${params.slug.replace(/^(en|cn)\//, "")}`
+          : `${baseUrl}/${alternateLocales[0]}`,
+        [getLocaleHrefLang(alternateLocales[1])]: params.slug
+          ? `${baseUrl}/${alternateLocales[1]}/${params.slug.replace(/^(en|cn)\//, "")}`
+          : `${baseUrl}/${alternateLocales[1]}`,
+        "x-default": params.slug
+          ? `${baseUrl}/en/${params.slug.replace(/^(en|cn)\//, "")}`
+          : `${baseUrl}/en`,
+      },
     },
   };
 }

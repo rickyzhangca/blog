@@ -1,5 +1,11 @@
 {
-  "title": "Verification asymmetry",
-  "description": "AI, designers, and the rise of design engineers",
+  "title": {
+    "en": "Verification asymmetry",
+    "cn": "验证不对称"
+  },
+  "description": {
+    "en": "AI, designers, and the rise of design engineers",
+    "cn": "AI、设计师与设计工程师的崛起"
+  },
   "published": "2025-07-01"
 }
