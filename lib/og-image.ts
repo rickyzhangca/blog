@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import type { ArticleMeta } from "./articles";
 
 export interface OGImageParams {
+  author?: string;
   title?: string;
   type?: "article" | "default";
-  author?: string;
 }
 
 /**
@@ -22,7 +22,7 @@ export function generateOGImageUrl(params: OGImageParams): string {
 
   // Add title parameter if provided
   if (params.title) {
-    baseUrl.searchParams.append("title", encodeURIComponent(params.title));
+    baseUrl.searchParams.append("title", params.title);
   }
 
   // Add type parameter if provided (article or default)
@@ -32,7 +32,7 @@ export function generateOGImageUrl(params: OGImageParams): string {
 
   // Add author parameter if provided
   if (params.author) {
-    baseUrl.searchParams.append("author", encodeURIComponent(params.author));
+    baseUrl.searchParams.append("author", params.author);
   }
 
   return baseUrl.toString();
@@ -67,10 +67,10 @@ export function generateDefaultOGImageUrl(
 }
 
 export interface GenerateMetadataParams {
-  title: string;
-  slug?: string;
   article?: ArticleMeta;
   description?: string;
+  slug?: string;
+  title: string;
 }
 
 /**

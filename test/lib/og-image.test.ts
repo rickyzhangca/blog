@@ -28,7 +28,7 @@ describe("OG Image URL Generation", () => {
       const params: OGImageParams = { title: "Test Title" };
       const url = generateOGImageUrl(params);
       expect(url).toContain("title=");
-      expect(url).toContain("Test%2520Title");
+      expect(new URL(url).searchParams.get("title")).toBe("Test Title");
     });
 
     it("should include type parameter when provided with valid value", () => {
@@ -41,7 +41,7 @@ describe("OG Image URL Generation", () => {
       const params: OGImageParams = { author: "Test Author" };
       const url = generateOGImageUrl(params);
       expect(url).toContain("author=");
-      expect(url).toContain("Test%2520Author");
+      expect(new URL(url).searchParams.get("author")).toBe("Test Author");
     });
 
     it("should include all parameters when provided", () => {
@@ -62,9 +62,9 @@ describe("OG Image URL Generation", () => {
       };
       const url = generateOGImageUrl(params);
       expect(url).toContain("title=");
-      expect(url).toContain("%2526"); // Double-encoded &
-      expect(url).toContain("%253A"); // Double-encoded :
-      expect(url).toContain("%2522"); // Double-encoded "
+      expect(new URL(url).searchParams.get("title")).toBe(
+        'Test & Title: Special "Characters"'
+      );
     });
 
     it("should use localhost when NEXT_PUBLIC_BASE_URL is not available", () => {
@@ -91,7 +91,7 @@ describe("OG Image URL Generation", () => {
 
       const url = generateArticleOGImageUrl(article);
       expect(url).toContain("title=");
-      expect(url).toContain("Test%2520Article");
+      expect(new URL(url).searchParams.get("title")).toBe("Test Article");
       expect(url).toContain("type=article");
     });
   });
@@ -100,14 +100,16 @@ describe("OG Image URL Generation", () => {
     it("should generate a default OG image URL with default values", () => {
       const url = generateDefaultOGImageUrl();
       expect(url).toContain("title=");
-      expect(url).toContain("Design%2520Engineer%2520Blog");
+      expect(new URL(url).searchParams.get("title")).toBe(
+        "Design Engineer Blog"
+      );
       expect(url).toContain("type=default");
     });
 
     it("should generate a default OG image URL with custom values", () => {
       const url = generateDefaultOGImageUrl("Custom Title");
       expect(url).toContain("title=");
-      expect(url).toContain("Custom%2520Title");
+      expect(new URL(url).searchParams.get("title")).toBe("Custom Title");
       expect(url).toContain("type=default");
     });
   });

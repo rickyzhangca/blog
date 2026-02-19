@@ -218,5 +218,24 @@ describe("OG Image API Endpoint", () => {
       // Restore real timers
       vi.useRealTimers();
     });
+
+    it("should render article title with spaces instead of encoded %20", async () => {
+      const request = new NextRequest(
+        "https://example.com/api/og?type=article&title=Verification%20asymmetry"
+      );
+
+      const parsedUrl = new URL(request.url);
+      expect(parsedUrl.searchParams.get("title")).toBe(
+        "Verification asymmetry"
+      );
+      expect(parsedUrl.searchParams.get("title")).not.toBe(
+        "Verification%20asymmetry"
+      );
+
+      const response = await GET(request);
+
+      expect(response).toBeDefined();
+      expect(ImageResponse).toHaveBeenCalled();
+    });
   });
 });
