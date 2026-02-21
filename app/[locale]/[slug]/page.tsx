@@ -82,9 +82,9 @@ export default async function ArticlePage({ params }: PageProps) {
 
   return (
     <ArticleLayout backHref={`/${locale}`} credit={content.credit}>
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+      <div className="mb-12 flex flex-col gap-2 sm:mb-0 sm:flex-row sm:items-start sm:justify-between">
         <H1>{articleForLocale.title}</H1>
-        <div className="not-prose shrink-0">
+        <div className="not-prose shrink-0 sm:mt-1">
           <ArticleLanguageToggle locale={locale} slug={slug} />
         </div>
       </div>
