@@ -1,5 +1,8 @@
 import { motion } from "framer-motion";
 
+const OUTER_RADIUS = 40;
+const CIRCUMFERENCE = 2 * Math.PI * OUTER_RADIUS;
+
 export const Cover = ({ className }: { className?: string }) => (
   <svg
     className={className}
@@ -10,24 +13,17 @@ export const Cover = ({ className }: { className?: string }) => (
   >
     <title>Ephemeral Design cover</title>
     <motion.circle
+      animate={{
+        opacity: [1, 0.5, 0.3],
+        strokeDasharray: [`${CIRCUMFERENCE} 0`, `${CIRCUMFERENCE} 0`, "7 7"],
+      }}
       cx="120"
       cy="80"
-      r="40"
-      className="stroke-foreground"
-      initial={{ pathLength: 0, opacity: 0 }}
-      animate={{ pathLength: 1, opacity: 1 }}
-      transition={{ duration: 1.5, ease: "easeInOut" }}
+      initial={{ opacity: 1, strokeDasharray: `${CIRCUMFERENCE} 0` }}
+      r={OUTER_RADIUS}
+      stroke="#000"
       strokeWidth={2}
-    />
-    <motion.circle
-      cx="120"
-      cy="80"
-      r="25"
-      className="stroke-foreground/50"
-      initial={{ pathLength: 0, opacity: 0 }}
-      animate={{ pathLength: 1, opacity: 0.5 }}
-      transition={{ duration: 1.5, ease: "easeInOut", delay: 0.3 }}
-      strokeWidth={2}
+      transition={{ duration: 1, ease: "easeInOut", times: [0, 0.5, 1] }}
     />
   </svg>
 );

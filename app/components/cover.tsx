@@ -1,23 +1,25 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useAtom } from "jotai";
 import { RotateCcwIcon } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { isDevModeAtom } from "../atoms";
+import { Cover as EphemeralDesignCover } from "../ephemeral-design/cover";
 import { Cover as VerificationAsymmetryCover } from "../verification-asymmetry/cover";
 
 const covers: Record<
   string,
   ComponentType<SVGProps<SVGSVGElement> & { className?: string }>
 > = {
+  "ephemeral-design": EphemeralDesignCover,
   "verification-asymmetry": VerificationAsymmetryCover,
 };
 
-type CoverProps = {
+interface CoverProps {
   id: string;
-};
+}
 
 export const Cover = ({ id }: CoverProps) => {
   const SvgComponent = covers[id];
@@ -44,7 +46,10 @@ export const Cover = ({ id }: CoverProps) => {
       </button>
       {SvgComponent && (
         <SvgComponent
-          className="absolute inset-0 h-full w-full translate-y-1"
+          className={cn(
+            "absolute inset-0 h-full w-full",
+            id === "verification-asymmetry" && "translate-y-1"
+          )}
           key={playId}
         />
       )}
