@@ -18,17 +18,17 @@ export function ArticleLanguageToggle({
 
   return (
     <Link
-      className="flex items-center gap-1.5 rounded border px-3 py-1.5 font-medium text-sm transition-colors hover:bg-foreground/5"
+      className="flex w-fit items-center gap-1.5 rounded border px-3 py-1.5 font-medium text-sm transition-colors hover:bg-foreground/5"
       href={alternatePath}
     >
       <span
-        className={locale === "en" ? "text-foreground/40" : "text-foreground"}
+        className={locale === "en" ? "text-foreground" : "text-foreground/40"}
       >
         EN
       </span>
       <span className="text-foreground/40">/</span>
       <span
-        className={locale === "cn" ? "text-foreground/40" : "text-foreground"}
+        className={locale === "cn" ? "text-foreground" : "text-foreground/40"}
       >
         中文
       </span>

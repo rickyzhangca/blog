@@ -3,8 +3,6 @@ import { notFound } from "next/navigation";
 import { ArticleLayout } from "@/app/article-layout";
 import { ArticleLanguageToggle } from "@/app/components/article-language-toggle";
 import { H1 } from "@/app/components/h";
-import "@/lib/article-content/verification-asymmetry.en";
-import "@/lib/article-content/verification-asymmetry.cn";
 import { getArticleContent } from "@/lib/article-content";
 import {
   getArticleBySlug,
@@ -76,7 +74,7 @@ export default async function ArticlePage({ params }: PageProps) {
   }
 
   const articleForLocale = getArticleMetaForLocale(articleMeta, locale);
-  const content = getArticleContent(slug, locale);
+  const content = await getArticleContent(slug, locale);
 
   if (!content) {
     notFound();

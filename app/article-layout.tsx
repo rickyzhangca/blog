@@ -16,7 +16,7 @@ export function ArticleLayout({
   return (
     <>
       <Divider className="border-t-0" />
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-8 p-4 md:gap-4">
         <BackButton href={backHref} />
         <article className="prose prose-gray max-w-none py-2 prose-a:text-current prose-a:decoration-foreground/20 prose-a:underline-offset-2 sm:px-4 sm:pt-10 sm:pb-4">
           {children}

@@ -1,7 +1,15 @@
+import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+});
+
 const nextConfig: NextConfig = {
-  // https://nextjs.org/docs/app/api-reference/components/image#dangerouslyallowsvg
+  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
   images: {
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",
@@ -9,4 +17,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withMDX(nextConfig);
