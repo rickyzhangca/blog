@@ -18,4 +18,8 @@ export const mdxManifest: ArticleManifest = {
     en: () => import("@/content/articles/verification-asymmetry/en.mdx"),
     cn: () => import("@/content/articles/verification-asymmetry/cn.mdx"),
   },
+  "ephemeral-design": {
+    en: () => import("@/content/articles/ephemeral-design/en.mdx"),
+    cn: () => import("@/content/articles/ephemeral-design/cn.mdx"),
+  },
 };
