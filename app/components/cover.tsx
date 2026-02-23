@@ -6,6 +6,7 @@ import type { ComponentType, SVGProps } from "react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { isDevModeAtom } from "../atoms";
+import { Cover as DesignSystemTeamMaturityCover } from "../design-system-team-maturity/cover";
 import { Cover as EphemeralDesignCover } from "../ephemeral-design/cover";
 import { Cover as VerificationAsymmetryCover } from "../verification-asymmetry/cover";
 
@@ -13,6 +14,7 @@ const covers: Record<
   string,
   ComponentType<SVGProps<SVGSVGElement> & { className?: string }>
 > = {
+  "design-system-team-maturity": DesignSystemTeamMaturityCover,
   "ephemeral-design": EphemeralDesignCover,
   "verification-asymmetry": VerificationAsymmetryCover,
 };
