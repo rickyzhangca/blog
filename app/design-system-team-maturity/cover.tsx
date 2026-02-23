@@ -1,9 +1,9 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { D_STROKES, DS_VIEWBOX, S_STROKES } from "./paths";
 
-const DRAW_DURATION = 0.9;
-const DRAW_STAGGER = 0.12;
-const S_GLYPH_DELAY = 0.28;
+const DRAW_DURATION = 0.5;
+const DRAW_STAGGER = 0.2;
+const S_GLYPH_DELAY = 0.45;
 
 export const Cover = ({ className }: { className?: string }) => {
   const shouldReduceMotion = useReducedMotion();
@@ -21,11 +21,15 @@ export const Cover = ({ className }: { className?: string }) => {
 
       {D_STROKES.map((stroke, index) => (
         <motion.path
-          animate={{ opacity: 1, pathLength: 1 }}
+          animate={{ opacity: 1, pathLength: 1, pathOffset: 0 }}
           className="stroke-foreground"
           d={stroke.d}
           fill="none"
-          initial={shouldReduceMotion ? false : { opacity: 0.2, pathLength: 0 }}
+          initial={
+            shouldReduceMotion
+              ? false
+              : { opacity: 0.2, pathLength: 0, pathOffset: 0 }
+          }
           key={stroke.id}
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -44,11 +48,15 @@ export const Cover = ({ className }: { className?: string }) => {
 
       {S_STROKES.map((stroke, index) => (
         <motion.path
-          animate={{ opacity: 1, pathLength: 1 }}
+          animate={{ opacity: 1, pathLength: 1, pathOffset: 0 }}
           className="stroke-foreground"
           d={stroke.d}
           fill="none"
-          initial={shouldReduceMotion ? false : { opacity: 0.2, pathLength: 0 }}
+          initial={
+            shouldReduceMotion
+              ? false
+              : { opacity: 0.2, pathLength: 0, pathOffset: 0 }
+          }
           key={stroke.id}
           strokeLinecap="round"
           strokeLinejoin="round"
