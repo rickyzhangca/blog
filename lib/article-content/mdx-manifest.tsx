@@ -22,4 +22,8 @@ export const mdxManifest: ArticleManifest = {
     en: () => import("@/content/articles/ephemeral-design/en.mdx"),
     cn: () => import("@/content/articles/ephemeral-design/cn.mdx"),
   },
+  "design-system-team-maturity": {
+    en: () => import("@/content/articles/design-system-team-maturity/en.mdx"),
+    cn: () => import("@/content/articles/design-system-team-maturity/cn.mdx"),
+  },
 };
