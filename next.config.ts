@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 
 const withMDX = createMDX({
   options: {
-    remarkPlugins: [],
+    remarkPlugins: ["remark-gfm"],
     rehypePlugins: [],
   },
 });
